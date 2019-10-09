@@ -1,5 +1,6 @@
 package com.example.planner.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +16,7 @@ class StatisticsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        return inflater.inflate(R.layout.statistics, container, false) as ViewGroup
+        val view = inflater.inflate(R.layout.statistics, container, false) as ViewGroup
+        return view
     }
 }

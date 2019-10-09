@@ -22,7 +22,7 @@
         android:typeface = "monospace" />
 
     <Button
-        android:id="@+id/button0"
+        android:id="@+id/btnToToDO"
         android:layout_width="290dp"
         android:layout_height="70dp"
         android:drawableLeft="@drawable/todo_list"
@@ -32,7 +32,7 @@
         android:drawableStart="@drawable/todo_list" />
 
     <Button
-        android:id = "@+id/button1"
+        android:id = "@+id/btnToCat"
         android:layout_width = "290dp"
         android:layout_height = "70dp"
         android:background="@drawable/menu_button"
@@ -40,7 +40,7 @@
         android:text="@string/cat" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnToNotes"
         android:layout_width="290dp"
         android:layout_height="70dp"
         android:drawableLeft="@drawable/notes_icon1"
@@ -51,7 +51,7 @@
         android:drawableStart="@drawable/notes_icon1" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btnToCalendar"
         android:layout_width="290dp"
         android:layout_height="70dp"
         android:drawableLeft="@drawable/calendar_icon1"
@@ -61,7 +61,7 @@
         android:drawableStart="@drawable/calendar_icon1" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/btnToStatistics"
         android:layout_width="290dp"
         android:layout_height="70dp"
         android:drawableLeft="@drawable/statistics_icon1"
