@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">Planner</string>
+    <string name="statistics">Statistics</string>
+    <string name="completed_jobs">Всего дел сделано: </string>
+    <string name="completed_jobs_quantty">0</string>
+
+    <string name="failed_jobs">Всего дел провалено: </string>
+    <string name="failed_jobs_quantity">0</string>
+
+    <string name="productivity">Продуктивность: </string>
+    <string name="productivity_percent">0</string>
+
+    <string name="current_week">21.08 - 28.08: </string>
+
+    <string name="shock_days">Количество ударных дней: </string>
+    <string name="shock_days_quantity">0</string>
+
+    <string name="completed_jobs_week">Сделано: </string>
+    <string name="completed_wjobs_quantity">0</string>
+
+    <string name="failed_jobs_week">Провалено: </string>
+    <string name="failed_wjobs_quantity">0</string>
+
+    <string name="left_jobs_week">Осталось: </string>
+    <string name="left_wjobs_quantity">0</string>
+
+    <string name="status">Текущий статус: </string>
+    <string name="current_status">Человек-муравей</string>
+
+    <string name="next_status_name">Следующий статус: </string>
+    <string name="next_status">Кто-то больший, чем человек-муравей</string>
+
+    <string name="next_status_days_name">Дней до следующего статуса: </string>
+    <string name="next_status_days">100</string>
+
+    <string name="super_planner">Super-planner</string>
+
+    <string name="cat">Cat</string>
+
+    <string name="notes">Notes</string>
+
+    <string name="todo">Todo</string>
+
+    <string name="calendar">Calendar</string>
+
+    <string name="Settings">Button</string>
+
+    <string name="settings">Settings</string>
+
+    <string name="shop">shop</string>
+
+    <string name="phrase">Вперед к работе!</string>
+</resources>

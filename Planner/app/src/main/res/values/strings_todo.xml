@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="page_name">Мои планы</string>
+    <string name="day_todo">0</string>
+    <string name="month_todo">Январь</string>
+    <string name="day_of_week_todo">Понедельник</string>
+    <string name="current_time_todo">00:00</string>
+    <string name="add_button_todo">+</string>
+    <string name="delete_button_todo">×</string>
+</resources>

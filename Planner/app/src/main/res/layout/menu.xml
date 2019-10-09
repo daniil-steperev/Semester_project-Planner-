@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@drawable/background_for_menu0"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width = "300dp"
+        android:layout_height = "70dp"
+        android:text = "@string/super_planner"
+        android:textAllCaps = "false"
+        android:textColor = "#5A5757"
+        android:textSize = "24sp"
+        android:gravity = "center"
+        android:textStyle = "italic"
+        android:typeface = "monospace" />
+
+    <Button
+        android:id="@+id/btnToToDO"
+        android:layout_width="290dp"
+        android:layout_height="70dp"
+        android:drawableLeft="@drawable/todo_list"
+        android:background="@drawable/menu_button"
+        android:padding="15dp"
+        android:text="@string/todo"
+        android:drawableStart="@drawable/todo_list" />
+
+    <Button
+        android:id = "@+id/btnToCat"
+        android:layout_width = "290dp"
+        android:layout_height = "70dp"
+        android:background="@drawable/menu_button"
+        android:padding="15dp"
+        android:text="@string/cat" />
+
+    <Button
+        android:id="@+id/btnToNotes"
+        android:layout_width="290dp"
+        android:layout_height="70dp"
+        android:drawableLeft="@drawable/notes_icon1"
+        android:background="@drawable/menu_button"
+        android:padding="15dp"
+
+        android:text="@string/notes"
+        android:drawableStart="@drawable/notes_icon1" />
+
+    <Button
+        android:id="@+id/btnToCalendar"
+        android:layout_width="290dp"
+        android:layout_height="70dp"
+        android:drawableLeft="@drawable/calendar_icon1"
+        android:background="@drawable/menu_button"
+        android:padding="15dp"
+        android:text = "@string/calendar"
+        android:drawableStart="@drawable/calendar_icon1" />
+
+    <Button
+        android:id="@+id/btnToStatistics"
+        android:layout_width="290dp"
+        android:layout_height="70dp"
+        android:drawableLeft="@drawable/statistics_icon1"
+        android:background="@drawable/menu_button"
+        android:padding="20dp"
+        android:text="@string/statistics"
+        android:drawableStart="@drawable/statistics_icon1" />
+
+    <Button
+        android:id="@+id/button5"
+        android:layout_width="290dp"
+        android:layout_height="70dp"
+        android:drawableLeft="@drawable/settings_icon"
+        android:background="@drawable/menu_button"
+        android:padding="15dp"
+        android:text="Settings"
+        android:drawableStart="@drawable/settings_icon" />
+</LinearLayout>
