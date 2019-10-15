@@ -1,4 +1,4 @@
-package com.example.planner.calendar
+package com.example.planner.calendar.events
 
 import android.os.Bundle
 import android.view.View
@@ -7,8 +7,8 @@ import ru.cleverpumpkin.calendar.CalendarDate
 import ru.cleverpumpkin.calendar.CalendarView
 import ru.cleverpumpkin.calendar.extension.getColorInt
 import com.example.planner.R
-import kotlinx.android.synthetic.main.activity_calendar.*
-import kotlinx.android.synthetic.main.activity_calendar.fragment_calendar.*
+import com.example.planner.calendar.BaseFragment
+import kotlinx.android.synthetic.main.fragment_calendar.*
 
 import java.util.*
 
@@ -32,24 +32,25 @@ class EventListDemoFragment : BaseFragment() {
             setNavigationOnClickListener { activity?.onBackPressed() }
         }
 
-        calendar_view.datesIndicators = generateEventItems()
+        calendarView.datesIndicators = generateEventItems()
 
-        calendar_view.onDateClickListener = { date ->
+        calendarView.onDateClickListener = { date ->
             showDialogWithEventsForSpecificDate(date)
         }
 
         if (savedInstanceState == null) {
-            calendar_view.setupCalendar(selectionMode = CalendarView.SelectionMode.NONE)
+            calendarView.setupCalendar(selectionMode = CalendarView.SelectionMode.NONE)
         }
     }
 
     private fun showDialogWithEventsForSpecificDate(date: CalendarDate) {
-        val eventItems = calendar_view.getDateIndicators(date)
+        val eventItems = calendarView.getDateIndicators(date)
             .filterIsInstance<EventItem>()
             .toTypedArray()
 
         if (eventItems.isNotEmpty()) {
-            val adapter = EventDialogAdapter(requireContext(), eventItems)
+            val adapter =
+                EventDialogAdapter(requireContext(), eventItems)
 
             val builder = AlertDialog.Builder(requireContext())
                 .setTitle("$date")

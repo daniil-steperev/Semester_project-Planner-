@@ -1,4 +1,4 @@
-package com.example.planner.calendar
+package com.example.planner.calendar.events
 
 import android.content.Context
 import android.view.LayoutInflater

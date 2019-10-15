@@ -1,4 +1,4 @@
-package com.example.planner.calendar
+package com.example.planner.calendar.events
 
 import ru.cleverpumpkin.calendar.CalendarDate
 import ru.cleverpumpkin.calendar.CalendarView

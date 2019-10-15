@@ -1,13 +1,15 @@
 package com.example.planner
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import kotlinx.android.synthetic.main.activity_calendar.*
-import ru.cleverpumpkin.calendar.CalendarDate
-import ru.cleverpumpkin.calendar.CalendarView
-import ru.cleverpumpkin.calendar.CalendarView.DateIndicator
-import java.util.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentTransaction
+import com.example.planner.calendar.customstyle.CodeStylingDemoFragment
+import com.example.planner.calendar.dateboundaries.DateBoundariesDemoFragment
+import com.example.planner.calendar.demolist.DemoItem
+import com.example.planner.calendar.demolist.DemoListFragment
+import com.example.planner.calendar.dialogue.DialogDemoFragment
+import com.example.planner.calendar.events.EventListDemoFragment
+import com.example.planner.calendar.selection.SelectionModesDemoFragment
 
 class CalendarActivity : AppCompatActivity(), DemoListFragment.OnDemoItemSelectionListener  {
 
