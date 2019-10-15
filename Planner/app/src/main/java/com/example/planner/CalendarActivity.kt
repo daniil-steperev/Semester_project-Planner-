@@ -35,8 +35,8 @@ class CalendarActivity : AppCompatActivity(), DemoListFragment.OnDemoItemSelecti
     }*/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+        setContentView(R.layout.activity_calendar)
+        
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
                 .add(R.id.fragmentContainer, DemoListFragment())
