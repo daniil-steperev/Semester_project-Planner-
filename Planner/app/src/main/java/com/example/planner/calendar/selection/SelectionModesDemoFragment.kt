@@ -5,7 +5,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.fragment_selection_modes.*
 import com.example.planner.calendar.BaseFragment
 import com.example.planner.R
-import ru.cleverpumpkin.calendar.sample.selection.modes.*
+import com.example.planner.calendar.selection.modes.*
 
 /**
  * Created by Alexander Surinov on 2019-05-13.

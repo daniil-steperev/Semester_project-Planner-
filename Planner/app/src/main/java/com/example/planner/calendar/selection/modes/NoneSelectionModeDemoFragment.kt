@@ -1,11 +1,11 @@
-package ru.cleverpumpkin.calendar.sample.selection.modes
+package com.example.planner.calendar.selection.modes
 
 import android.os.Bundle
 import android.view.View
 import kotlinx.android.synthetic.main.fragment_demo_selection.*
 import ru.cleverpumpkin.calendar.CalendarView
-import ru.cleverpumpkin.calendar.sample.BaseFragment
-import ru.cleverpumpkin.calendar.sample.R
+import com.example.planner.calendar.BaseFragment
+import com.example.planner.R
 
 /**
  * This demo fragment demonstrate usage of the [CalendarView] with the

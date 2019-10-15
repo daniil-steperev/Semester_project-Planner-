@@ -5,8 +5,8 @@ import android.view.View
 import kotlinx.android.synthetic.main.fragment_demo_selection.*
 import ru.cleverpumpkin.calendar.CalendarDate
 import ru.cleverpumpkin.calendar.CalendarView
-import ru.cleverpumpkin.calendar.sample.BaseFragment
-import ru.cleverpumpkin.calendar.sample.R
+import com.example.planner.calendar.BaseFragment
+import com.example.planner.R
 import java.util.*
 
 /**

@@ -1,5 +1,4 @@
 ﻿<resources>
-    <string name="app_name">Planner</string>
     <string name="statistics">Statistics</string>
     <string name="completed_jobs">Всего дел сделано: </string>
     <string name="completed_jobs_quantty">0</string>
