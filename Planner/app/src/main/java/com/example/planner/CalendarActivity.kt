@@ -78,28 +78,19 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         cursor.moveToFirst()
         var i: Int = 0
         while (!cursor.isAfterLast) {
-            i = 0
-            println("CURSOR")
-            println(cursor.columnCount)
-            while (i < cursor.columnCount) {
-                product += cursor.getString(i)
-                i++
-            }
+            val day = Calendar.getInstance(Locale.ENGLISH)
+            day.timeInMillis = cursor.getLong(1)
+            eventList.add(
+                MyCalendarEvent(
+                    day, day,
+                    DayItem.buildDayItemFromCal(day), SampleEvent(0, cursor.getString(2), "")
+                ).setEventInstanceDay(day)
+            )
             cursor.moveToNext()
         }
         cursor.close()
 
         println(product)
-
-        val day = Calendar.getInstance(Locale.ENGLISH)
-        day.timeInMillis = System.currentTimeMillis()
-        day.set(Calendar.DAY_OF_MONTH, 1)
-        eventList.add(
-            MyCalendarEvent(
-                day, day,
-                DayItem.buildDayItemFromCal(day), SampleEvent(0, "database", "sdfksdljfskd")
-            ).setEventInstanceDay(day)
-        )
 
         contentManager.loadItemsFromStart(eventList)
         agenda_calendar_view.agendaView.agendaListView.setOnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long ->
