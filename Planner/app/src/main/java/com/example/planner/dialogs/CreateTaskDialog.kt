@@ -15,6 +15,8 @@ import java.sql.Date
 import java.sql.Time
 
 class CreateTaskDialog : DialogFragment(), View.OnClickListener {
+    var isReady = false;
+
     private lateinit var time : String
     private lateinit var task : String
 
@@ -26,6 +28,8 @@ class CreateTaskDialog : DialogFragment(), View.OnClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        isReady = false
+
         val view = inflater.inflate(R.layout.create_task, null)
         view.findViewById<Button>(R.id.create_task_button).setOnClickListener(this)
 
@@ -41,6 +45,7 @@ class CreateTaskDialog : DialogFragment(), View.OnClickListener {
     }
 
     fun getTask() : Task {
+        isReady = true
         return Task(Date.valueOf("11:11:19"), Time.valueOf("11:11:11"), "abc") // FIXME : DATE
     }
 }
