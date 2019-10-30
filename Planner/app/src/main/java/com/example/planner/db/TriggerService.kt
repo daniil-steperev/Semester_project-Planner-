@@ -7,9 +7,11 @@ class TriggerService {
 
     fun readTrigger(date : Long) : MutableList<Trigger> {
         // FIXME
+        return mutableListOf()
     }
 
     fun map(cursor : Cursor) : Trigger {
         // FIXME
+        return Trigger(1, TriggerRule.MONDAY)
     }
 }
