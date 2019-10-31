@@ -46,9 +46,9 @@ class DatabaseWorker {
         eventService.deleteEvent(e, mDb)
     }
 
-    /*fun readEventsForToday() {
-        //eventService.
-    }*/
+    fun readEventsForToday() /*: List<Event>*/ {
+        eventService.readEvent(mDb)
+    }
 
     fun closeConnection() {
         mDBHelper.close()

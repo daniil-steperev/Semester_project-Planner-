@@ -62,8 +62,8 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         event.setDescription("Group theory")
         event.setTime(1367280000)
         connection.addEvent(event)
-
-        val cursor = connection.getmDb().rawQuery("SELECT * FROM Event", null, null)
+        connection.readEventsForToday()
+        /*val cursor = connection.getmDb().rawQuery("SELECT * FROM Event", null, null)
         cursor.moveToFirst()
         var result : String = ""
         while (!cursor.isAfterLast) {
@@ -83,7 +83,7 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
             cursor1.moveToNext()
         }
         cursor1.close()
-        println("HAHA $result1")
+        println("HAHA $result1")*/
 
         connection.closeConnection()
 
