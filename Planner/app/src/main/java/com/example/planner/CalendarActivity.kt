@@ -75,15 +75,12 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
             throw mSQLException
         }
 
-        /*var eventService = EventService()
+        var eventService = EventService()
         var event = Event()
         event.setName("Algebra")
         event.setDescription("Group theory")
-        event.setTime(1367280000)*/
-        //eventService.addEvent(event, mDb)
-        var values = ContentValues()
-        values.put("name", "hello")
-        mDb.insert("Event", "null", values)
+        event.setTime(1367280000)
+        eventService.addEvent(event, mDb)
 
         val cursor = mDb.rawQuery("SELECT * FROM Event", null, null)
         cursor.moveToFirst()
