@@ -1,7 +1,5 @@
 package com.example.planner
 
-import android.content.ContentValues
-import android.database.SQLException
 import android.os.AsyncTask
 import android.os.Bundle
 import android.view.View
@@ -17,9 +15,7 @@ import com.ognev.kotlin.agendacalendarview.models.IDayItem
 import kotlinx.android.synthetic.main.activity_calendar.*
 import java.util.*
 import kotlin.collections.ArrayList
-import android.database.sqlite.SQLiteDatabase;
 import com.example.planner.db.*
-import java.io.IOException
 
 class CalendarActivity : AppCompatActivity(), CalendarController {
 
@@ -30,8 +26,8 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
     private lateinit var contentManager: CalendarContentManager
     private var startMonth: Int = Calendar.getInstance().get(Calendar.MONTH)
     private var endMonth: Int = Calendar.getInstance().get(Calendar.MONTH)
-    private lateinit var mDBHelper: DatabaseHelper
-    private lateinit var mDb: SQLiteDatabase
+    /*private lateinit var mDBHelper: DatabaseHelper
+    private lateinit var mDb: SQLiteDatabase*/
 
     private var loadingTask: LoadingTask? = null
 
@@ -49,7 +45,6 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         minDate.set(Calendar.DAY_OF_MONTH, 1)
         maxDate.add(Calendar.YEAR, 1)
 
-
         contentManager = CalendarContentManager(
             this,
             agenda_calendar_view,
@@ -59,30 +54,16 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         contentManager.locale = Locale.ENGLISH
         contentManager.setDateRange(minDate, maxDate)
 
-        //var connection = DatabaseConnection()
-        //connection.setConnection(this)
+        var connection = DatabaseWorker()
+        connection.setConnection(this)
 
-        mDBHelper = DatabaseHelper(this)
-        try {
-            mDBHelper.updateDataBase()
-        } catch (mIOException: IOException) {
-            throw Error("UnableToUpdateDatabase")
-        }
-
-        try {
-            mDb = mDBHelper.writableDatabase
-        } catch (mSQLException: SQLException) {
-            throw mSQLException
-        }
-
-        var eventService = EventService()
         var event = Event()
         event.setName("Algebra")
         event.setDescription("Group theory")
         event.setTime(1367280000)
-        eventService.addEvent(event, mDb)
+        connection.addEvent(event)
 
-        val cursor = mDb.rawQuery("SELECT * FROM Event", null, null)
+        val cursor = connection.getmDb().rawQuery("SELECT * FROM Event", null, null)
         cursor.moveToFirst()
         var result : String = ""
         while (!cursor.isAfterLast) {
@@ -92,23 +73,19 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         cursor.close()
         println("HAHA $result")
 
-        mDb.close()
-        /*cursor.moveToFirst()
-        var i: Int = 0
+        connection.deleteEvent(event)
+
+        val cursor1 = connection.getmDb().rawQuery("SELECT * FROM Event", null, null)
+        cursor1.moveToFirst()
+        var result1 : String = ""
         while (!cursor.isAfterLast) {
-            println("WE ARE HERE")
-            val day = Calendar.getInstance(Locale.ENGLISH)
-            day.timeInMillis = cursor.getLong(3)
-            eventList.add(
-                MyCalendarEvent(
-                    day, day,
-                    DayItem.buildDayItemFromCal(day), SampleEvent(0, cursor.getString(2), "")
-                ).setEventInstanceDay(day)
-            )
-            println(cursor.getString(2))
-            cursor.moveToNext()
+            result1 += cursor.getString(1)
+            cursor1.moveToNext()
         }
-        cursor.close()*/
+        cursor1.close()
+        println("HAHA $result1")
+
+        connection.closeConnection()
 
         contentManager.loadItemsFromStart(eventList)
         agenda_calendar_view.agendaView.agendaListView.setOnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long ->

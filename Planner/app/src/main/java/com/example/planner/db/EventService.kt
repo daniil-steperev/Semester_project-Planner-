@@ -13,8 +13,9 @@ class EventService {
         mDb.execSQL(query)
     }
 
-    fun deleteEvent(e : Event) {
-
+    fun deleteEvent(e : Event, mDb : SQLiteDatabase) {
+        val query : String = "DELETE FROM Event WHERE name = \"${e.getName()}\"; "
+        mDb.execSQL(query)
     }
 
     /*fun readEvent(list : MutableList<Trigger>) : {

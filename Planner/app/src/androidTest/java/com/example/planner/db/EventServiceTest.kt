@@ -1,10 +1,6 @@
 package com.example.planner.db
 
-import com.example.planner.DatabaseConnection
-import com.example.planner.DatabaseHelper
 import org.junit.Test
-
-import org.junit.Assert.*
 
 class EventServiceTest {
 
@@ -16,7 +12,7 @@ class EventServiceTest {
         event.setTime(12301928342)
         //event.se
         //event.setDoneSuccessful()
-        var connection = DatabaseConnection()
+        var connection = DatabaseWorker()
         connection.addEvent(event)*/
         //assertEquals()
     }
