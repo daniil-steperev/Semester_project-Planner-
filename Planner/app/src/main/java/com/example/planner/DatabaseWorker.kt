@@ -38,12 +38,12 @@ class DatabaseWorker {
 
     fun addEvent(e : Event) {
         println("In DBConnection")
-        eventService.addEvent(e, mDb)
+        eventService.addEvent(e, mDb, mDBHelper)
     }
 
     fun deleteEvent(e : Event) {
         println("In DBConnection")
-        eventService.deleteEvent(e, mDb)
+        eventService.deleteEvent(e, mDb, mDBHelper)
     }
 
     fun readEventsForToday() /*: List<Event>*/ {
