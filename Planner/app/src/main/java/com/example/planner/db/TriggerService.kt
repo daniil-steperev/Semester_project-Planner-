@@ -11,7 +11,22 @@ class TriggerService {
     }
 
     fun map(cursor : Cursor) : Trigger {
-        // FIXME
-        return Trigger(1, TriggerRule.MONDAY)
+        val triggerId = cursor.getString(cursor.getColumnIndex("id")).toLong()
+        val rule = cursor.getString(cursor.getColumnIndex("rule"))
+
+        val triggerRule = when (rule) {
+            "MONDAY" -> TriggerRule.MONDAY
+            "TUESDAY" -> TriggerRule.TUESDAY
+            "WEDNESDAY" -> TriggerRule.WEDNESDAY
+            "THURSDAY" -> TriggerRule.THURSDAY
+            "FRIDAY" -> TriggerRule.FRIDAY
+            "SATURDAY" -> TriggerRule.SATURDAY
+            "SUNDAY" -> TriggerRule.SUNDAY
+            "DAILY" -> TriggerRule.DAILY
+            "WEEKLY" -> TriggerRule.WEEKLY
+            else -> TriggerRule.DAILY // FIXME: maybe call an exception?
+        }
+
+        return Trigger(triggerId, triggerRule)
     }
 }

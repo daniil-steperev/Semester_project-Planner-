@@ -1,5 +1,6 @@
 package com.example.planner
 
+import android.content.ContentValues
 import android.database.SQLException
 import android.os.AsyncTask
 import android.os.Bundle
@@ -17,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_calendar.*
 import java.util.*
 import kotlin.collections.ArrayList
 import android.database.sqlite.SQLiteDatabase;
+import com.example.planner.db.*
 import java.io.IOException
 
 class CalendarActivity : AppCompatActivity(), CalendarController {
@@ -57,14 +59,15 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         contentManager.locale = Locale.ENGLISH
         contentManager.setDateRange(minDate, maxDate)
 
-        mDBHelper = DatabaseHelper(this)
+        //var connection = DatabaseConnection()
+        //connection.setConnection(this)
 
+        mDBHelper = DatabaseHelper(this)
         try {
             mDBHelper.updateDataBase()
         } catch (mIOException: IOException) {
             throw Error("UnableToUpdateDatabase")
         }
-
 
         try {
             mDb = mDBHelper.writableDatabase
@@ -72,25 +75,43 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
             throw mSQLException
         }
 
-        var product = ""
+        /*var eventService = EventService()
+        var event = Event()
+        event.setName("Algebra")
+        event.setDescription("Group theory")
+        event.setTime(1367280000)*/
+        //eventService.addEvent(event, mDb)
+        var values = ContentValues()
+        values.put("name", "hello")
+        mDb.insert("Event", "null", values)
 
-        val cursor = mDb.rawQuery("SELECT * FROM tasks", null, null)
+        val cursor = mDb.rawQuery("SELECT * FROM Event", null, null)
         cursor.moveToFirst()
+        var result : String = ""
+        while (!cursor.isAfterLast) {
+            result += cursor.getString(1)
+            cursor.moveToNext()
+        }
+        cursor.close()
+        println("HAHA $result")
+
+        mDb.close()
+        /*cursor.moveToFirst()
         var i: Int = 0
         while (!cursor.isAfterLast) {
+            println("WE ARE HERE")
             val day = Calendar.getInstance(Locale.ENGLISH)
-            day.timeInMillis = cursor.getLong(1)
+            day.timeInMillis = cursor.getLong(3)
             eventList.add(
                 MyCalendarEvent(
                     day, day,
                     DayItem.buildDayItemFromCal(day), SampleEvent(0, cursor.getString(2), "")
                 ).setEventInstanceDay(day)
             )
+            println(cursor.getString(2))
             cursor.moveToNext()
         }
-        cursor.close()
-
-        println(product)
+        cursor.close()*/
 
         contentManager.loadItemsFromStart(eventList)
         agenda_calendar_view.agendaView.agendaListView.setOnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long ->
