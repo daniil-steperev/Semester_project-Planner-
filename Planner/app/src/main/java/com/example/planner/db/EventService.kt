@@ -9,23 +9,30 @@ import java.util.*
 
 class EventService {
     fun addEvent(e : Event, mDb : SQLiteDatabase, dbHelper : DatabaseHelper) {
-        val query1 : String = "INSERT INTO Event (name) VALUES(\"${e.getName()}\"); "
-        val query2 : String = "INSERT INTO event_param (event_id, description, time) VALUES((SELECT id from Event where name = \"${e.getName()}\"), \"${e.getDescription()}\", \"${e.getTime()}\");"
-        //mDb.beginTransaction()
-        mDb.execSQL(query1)
-        //dbHelper.onUpgrade(mDb, mDb.version, ++mDb.version)
-        //dbHelper.updateDataBase()
-        //mDb.onUpgrade
-        mDb.execSQL(query2)
-        //mDb.endTransaction()
+        try {
+            val query1: String = "INSERT INTO event (name) VALUES(\"${e.getName()}\"); "
+
+            mDb.beginTransaction()
+            mDb.execSQL(query1)
+            mDb.setTransactionSuccessful()
+
+            val cursor = mDb.rawQuery("SELECT * FROM event WHERE name = \"${e.getName()}\"", null)
+            cursor.moveToFirst()
+            var id : Int = cursor.getInt(0)
+
+            val query2: String =
+                "INSERT INTO event_param (event_id, description, time) VALUES($id, \"${e.getDescription()}\", ${e.getTime()});"
+            mDb.execSQL(query2)
+            mDb.endTransaction()
+        } catch (e : android.database.sqlite.SQLiteConstraintException){
+            println("Such event already exists")
+        }
 
     }
 
     fun deleteEvent(e : Event, mDb : SQLiteDatabase, dbHelper : DatabaseHelper) {
         val query : String = "DELETE FROM Event WHERE name = \"${e.getName()}\"; "
         mDb.execSQL(query)
-        dbHelper.updateDataBase()
-        //dbHelper.onUpgrade(mDb, mDb.version, ++mDb.version)
     }
 
     fun readEvent(/*list : MutableList<Trigger>,*/ mDb : SQLiteDatabase) : MutableList<Event> {
@@ -39,16 +46,17 @@ class EventService {
             e.setName(cursor.getString(cursor.getColumnIndex("name")))
             e.setID(cursor.getLong(cursor.getColumnIndex("id")))
             var result : String = "${e.getID()}  ${e.getName()}"
-            println(result)
+            //println(result)
             val query : String = "SELECT * FROM event_param WHERE event_id = ${e.getID()}; "
 
             var cursorInEventParam : Cursor = mDb.rawQuery(query, null)
             cursorInEventParam.moveToFirst()
-            println(cursorInEventParam.getString(2))
-            println(cursorInEventParam.getLong(3))
-            //e.setDescription(cursorInEventParam.getString(2))
-            //e.setTime(cursorInEventParam.getLong(3))
-            //events.add(e)
+            e.setDescription(cursorInEventParam.getString(2))
+            e.setTime(cursorInEventParam.getLong(3))
+            cursorInEventParam.close()
+            var result1 : String = "${e.getID()}  ${e.getName()} + ${e.getDescription()} + ${e.getTime()}"
+            println(result1)
+            events.add(e)
 
             cursor.moveToNext()
         }
