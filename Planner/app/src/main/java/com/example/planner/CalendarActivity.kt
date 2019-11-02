@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.planner.db.Event
 import com.ognev.kotlin.agendacalendarview.CalendarController
 import com.ognev.kotlin.agendacalendarview.CalendarManager
 import com.ognev.kotlin.agendacalendarview.builder.CalendarContentManager
@@ -13,9 +14,11 @@ import com.ognev.kotlin.agendacalendarview.models.CalendarEvent
 import com.ognev.kotlin.agendacalendarview.models.DayItem
 import com.ognev.kotlin.agendacalendarview.models.IDayItem
 import kotlinx.android.synthetic.main.activity_calendar.*
+
 import java.util.*
 import kotlin.collections.ArrayList
-import com.example.planner.db.*
+import kotlin.time.days
+import kotlin.time.milliseconds
 
 class CalendarActivity : AppCompatActivity(), CalendarController {
 
@@ -26,11 +29,8 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
     private lateinit var contentManager: CalendarContentManager
     private var startMonth: Int = Calendar.getInstance().get(Calendar.MONTH)
     private var endMonth: Int = Calendar.getInstance().get(Calendar.MONTH)
-    /*private lateinit var mDBHelper: DatabaseHelper
-    private lateinit var mDb: SQLiteDatabase*/
 
     private var loadingTask: LoadingTask? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,11 +45,8 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         minDate.set(Calendar.DAY_OF_MONTH, 1)
         maxDate.add(Calendar.YEAR, 1)
 
-        contentManager = CalendarContentManager(
-            this,
-            agenda_calendar_view,
-            SampleEventAgendaAdapter(applicationContext)
-        )
+
+        contentManager = CalendarContentManager(this, agenda_calendar_view, SampleEventAgendaAdapter(applicationContext))
 
         contentManager.locale = Locale.ENGLISH
         contentManager.setDateRange(minDate, maxDate)
@@ -60,42 +57,30 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         var event = Event()
         event.setName("English")
         event.setDescription("Problem-solution essay")
-        event.setTime(1367280000)
+        event.setTime(1367701200000)
 
         connection.addEvent(event)
-        //connection.deleteEvent(event)
 
-        /*val cursor = connection.getmDb().rawQuery("SELECT * FROM event_param", null, null)
-        cursor.moveToFirst()
-        var result : String = ""
-        while (!cursor.isAfterLast) {
-            result += cursor.getString(1)
-            result += cursor.getString(2)
-            cursor.moveToNext()
+        var list : List<Event> =  connection.readEventsForToday()
+
+        /*for (i in list) {
+            println(i.getName() + " " + i.getTime() + " " + i.getDescription())
+        }*/
+
+        for (i in list) {
+            val day = Calendar.getInstance(Locale.ENGLISH)
+            day.timeInMillis = i.getTime()
+            eventList.add(MyCalendarEvent(day, day,
+                DayItem.buildDayItemFromCal(day), SampleEvent(0, name = i.getName(), description = i.getDescription())).setEventInstanceDay(day))
         }
-        cursor.close()
-        println("HAHA $result")*/
 
-        connection.readEventsForToday()
-
-        /*val cursor1 = connection.getmDb().rawQuery("SELECT * FROM event", null, null)
-        cursor1.moveToFirst()
-        var result1 : String = ""
-        while (!cursor1.isAfterLast) {
-            result1 += cursor1.getString(1)
-            cursor1.moveToNext()
-        }
-        cursor1.close()
-        println("HAHA $result1")*/
-
-        //connection.readEventsForToday()
         connection.closeConnection()
         connection.getmDb().close()
 
-
         contentManager.loadItemsFromStart(eventList)
-        agenda_calendar_view.agendaView.agendaListView.setOnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long ->
-            Toast.makeText(view.context, "item: ".plus(position), Toast.LENGTH_SHORT).show()}
+        agenda_calendar_view.agendaView.agendaListView.setOnItemClickListener({ parent: AdapterView<*>, view: View, position: Int, id: Long ->
+            Toast.makeText(view.context, "item: ".plus(position), Toast.LENGTH_SHORT).show()
+        })
     }
 
     override fun onStop() {
@@ -177,14 +162,10 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
                         day.set(Calendar.YEAR, day.get(Calendar.YEAR) - 1)
                     }
 
-                    eventList.add(
-                        MyCalendarEvent(
-                            day, day,
-                            DayItem.buildDayItemFromCal(day),
-                            SampleEvent(name = "Awesome $i", description = "Event $i")
-                        )
-                            .setEventInstanceDay(day)
-                    )
+                    eventList.add(MyCalendarEvent(day, day,
+                        DayItem.buildDayItemFromCal(day),
+                        SampleEvent(name = "Awesome $i", description = "Event $i"))
+                        .setEventInstanceDay(day))
                 }
             } else {
                 if (endMonth >= 11) {
@@ -208,29 +189,21 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
                         day.set(Calendar.YEAR, day.get(Calendar.YEAR) + 1)
                     }
 
-                    if (i % 4 == 0) {
+                    if (i % 20 == 0) {
                         val day1 = Calendar.getInstance()
                         day1.timeInMillis = System.currentTimeMillis()
                         day1.set(Calendar.MONTH, endMonth)
                         day1.set(Calendar.DAY_OF_MONTH, i)
-                        eventList.add(
-                            MyCalendarEvent(
-                                day, day,
-                                DayItem.buildDayItemFromCal(day),
-                                SampleEvent(name = "Awesome $i", description = "Event $i")
-                            )
-                                .setEventInstanceDay(day)
-                        )
+                        eventList.add(MyCalendarEvent(day, day,
+                            DayItem.buildDayItemFromCal(day),
+                            SampleEvent(name = "Awesome $i", description = "Event $i"))
+                            .setEventInstanceDay(day))
                     }
 
-                    eventList.add(
-                        MyCalendarEvent(
-                            day, day,
-                            DayItem.buildDayItemFromCal(day),
-                            SampleEvent(name = "Awesome $i", description = "Event $i")
-                        )
-                            .setEventInstanceDay(day)
-                    )
+                    eventList.add(MyCalendarEvent(day, day,
+                        DayItem.buildDayItemFromCal(day),
+                        SampleEvent(name = "Awesome $i", description = "Event $i"))
+                        .setEventInstanceDay(day))
                 }
             }
         }
@@ -245,4 +218,3 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         }
     }
 }
-
