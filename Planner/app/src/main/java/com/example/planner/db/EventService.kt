@@ -10,8 +10,7 @@ import java.util.*
 class EventService {
     fun addEvent(e : Event, mDb : SQLiteDatabase, dbHelper : DatabaseHelper) {
         try {
-            val query1: String = "INSERT INTO event (name) VALUES(\"${e.getName()}\"); "
-
+            val query1 = "INSERT INTO event (name) VALUES(\"${e.getName()}\"); "
             mDb.beginTransaction()
             mDb.execSQL(query1)
             mDb.setTransactionSuccessful()
@@ -20,10 +19,12 @@ class EventService {
             cursor.moveToFirst()
             var id : Int = cursor.getInt(0)
 
-            val query2: String =
+            val query2 =
                 "INSERT INTO event_param (event_id, description, time) VALUES($id, \"${e.getDescription()}\", ${e.getTime()});"
             mDb.execSQL(query2)
+
             mDb.endTransaction()
+
         } catch (e : android.database.sqlite.SQLiteConstraintException){
             println("Such event already exists")
         }
@@ -36,7 +37,7 @@ class EventService {
     }
 
     fun readEvent(/*list : MutableList<Trigger>,*/ mDb : SQLiteDatabase) : MutableList<Event> {
-        val cursor = mDb.rawQuery("SELECT * FROM Event",null)
+        val cursor = mDb.rawQuery("SELECT * FROM event",null)
         var events : MutableList<Event> = LinkedList<Event>()
         cursor.moveToFirst()
         while (!cursor.isAfterLast) {
@@ -45,17 +46,17 @@ class EventService {
             var e : Event = Event()
             e.setName(cursor.getString(cursor.getColumnIndex("name")))
             e.setID(cursor.getLong(cursor.getColumnIndex("id")))
-            var result : String = "${e.getID()}  ${e.getName()}"
-            //println(result)
+            /*var result : String = "${e.getID()}  ${e.getName()}"
+            println(result)*/
             val query : String = "SELECT * FROM event_param WHERE event_id = ${e.getID()}; "
 
             var cursorInEventParam : Cursor = mDb.rawQuery(query, null)
             cursorInEventParam.moveToFirst()
-            e.setDescription(cursorInEventParam.getString(2))
-            e.setTime(cursorInEventParam.getLong(3))
+            e.setDescription(cursorInEventParam.getString(1))
+            e.setTime(cursorInEventParam.getLong(2))
             cursorInEventParam.close()
-            var result1 : String = "${e.getID()}  ${e.getName()} + ${e.getDescription()} + ${e.getTime()}"
-            println(result1)
+            /*var result1 : String = "${e.getID()}  ${e.getName()} + ${e.getDescription()} + ${e.getTime()}"
+            println(result1)*/
             events.add(e)
 
             cursor.moveToNext()

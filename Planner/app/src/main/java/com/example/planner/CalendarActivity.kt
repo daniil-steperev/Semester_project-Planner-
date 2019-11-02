@@ -58,14 +58,14 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         connection.setConnection(this)
 
         var event = Event()
-        event.setName("Algebra")
-        event.setDescription("Group theory")
+        event.setName("English")
+        event.setDescription("Problem-solution essay")
         event.setTime(1367280000)
 
         connection.addEvent(event)
-        //connection.deleteEvent(event)
+        connection.deleteEvent(event)
 
-        val cursor = connection.getmDb().rawQuery("SELECT * FROM event_param", null, null)
+        /*val cursor = connection.getmDb().rawQuery("SELECT * FROM event_param", null, null)
         cursor.moveToFirst()
         var result : String = ""
         while (!cursor.isAfterLast) {
@@ -74,21 +74,21 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
             cursor.moveToNext()
         }
         cursor.close()
-        println("HAHA $result")
+        println("HAHA $result")*/
 
-        /*connection.readEventsForToday()*/
+        connection.readEventsForToday()
 
-        val cursor1 = connection.getmDb().rawQuery("SELECT * FROM Event", null, null)
+        /*val cursor1 = connection.getmDb().rawQuery("SELECT * FROM event", null, null)
         cursor1.moveToFirst()
         var result1 : String = ""
-        while (!cursor.isAfterLast) {
-            result1 += cursor.getString(1)
+        while (!cursor1.isAfterLast) {
+            result1 += cursor1.getString(1)
             cursor1.moveToNext()
         }
         cursor1.close()
-        println("HAHA $result1")
+        println("HAHA $result1")*/
 
-        connection.readEventsForToday()
+        //connection.readEventsForToday()
         connection.closeConnection()
 
         contentManager.loadItemsFromStart(eventList)
