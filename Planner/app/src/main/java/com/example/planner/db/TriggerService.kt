@@ -1,13 +1,26 @@
 package com.example.planner.db
 
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 
 class TriggerService {
+    private lateinit var mDb : SQLiteDatabase
     // FIXME: SELECT OFFER (запрос)
 
     fun readTrigger(date : Long) : MutableList<Trigger> {
         // FIXME
-        return mutableListOf()
+        val cursor = mDb.rawQuery("SELECT * FROM trigger ", null) // FIXME
+        val triggerList = mutableListOf<Trigger>()
+
+        cursor.moveToFirst()
+        while (!cursor.isAfterLast) {
+            val newTrigger = map(cursor)
+
+            if (newTrigger.suits(date)) {
+                triggerList.add(newTrigger)
+            }
+        }
+        return triggerList
     }
 
     fun map(cursor : Cursor) : Trigger {
@@ -28,5 +41,9 @@ class TriggerService {
         }
 
         return Trigger(triggerId, triggerRule)
+    }
+
+    fun addTrigger(newTrigger : Trigger) {
+
     }
 }
