@@ -1,10 +1,8 @@
 package com.example.planner.db
 
-import android.content.ContentValues
 import android.database.Cursor
 import com.example.planner.DatabaseHelper
 import android.database.sqlite.SQLiteDatabase
-import android.graphics.Paint
 import java.util.*
 
 class EventService {
@@ -42,24 +40,7 @@ class EventService {
         var events : MutableList<Event> = LinkedList<Event>()
         cursor.moveToFirst()
         while (!cursor.isAfterLast) {
-            //events.add(mapEvent(cursor, mDb))
-
-            var e : Event = Event()
-            e.setName(cursor.getString(cursor.getColumnIndex("name")))
-            e.setID(cursor.getLong(cursor.getColumnIndex("id")))
-            /*var result : String = "${e.getID()}  ${e.getName()}"
-            println(result)*/
-            val query : String = "SELECT * FROM event_param WHERE event_id = ${e.getID()}; "
-
-            var cursorInEventParam : Cursor = mDb.rawQuery(query, null)
-            cursorInEventParam.moveToFirst()
-            e.setDescription(cursorInEventParam.getString(1))
-            e.setTime(cursorInEventParam.getLong(2))
-            cursorInEventParam.close()
-            /*var result1 : String = "${e.getID()}  ${e.getName()} + ${e.getDescription()} + ${e.getTime()}"
-            println(result1)*/
-            events.add(e)
-
+            events.add(mapEvent(cursor, mDb))
             cursor.moveToNext()
         }
         cursor.close()
@@ -78,14 +59,17 @@ class EventService {
         var e : Event = Event()
         e.setName(cursor.getString(cursor.getColumnIndex("name")))
         e.setID(cursor.getLong(cursor.getColumnIndex("id")))
-
+        /*var result : String = "${e.getID()}  ${e.getName()}"
+        println(result)*/
         val query : String = "SELECT * FROM event_param WHERE event_id = ${e.getID()}; "
 
         var cursorInEventParam : Cursor = mDb.rawQuery(query, null)
-
-        e.setDescription(cursorInEventParam.getString(cursorInEventParam.getColumnIndex("description")))
-        e.setTime(cursorInEventParam.getLong(cursorInEventParam.getColumnIndex("time")))
-
+        cursorInEventParam.moveToFirst()
+        e.setDescription(cursorInEventParam.getString(1))
+        e.setTime(cursorInEventParam.getLong(2))
+        cursorInEventParam.close()
+        /*var result1 : String = "${e.getID()}  ${e.getName()} + ${e.getDescription()} + ${e.getTime()}"
+        println(result1)*/
         return e
     }
 

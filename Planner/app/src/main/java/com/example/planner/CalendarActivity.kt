@@ -63,7 +63,7 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         event.setTime(1367280000)
 
         connection.addEvent(event)
-        connection.deleteEvent(event)
+        //connection.deleteEvent(event)
 
         /*val cursor = connection.getmDb().rawQuery("SELECT * FROM event_param", null, null)
         cursor.moveToFirst()
