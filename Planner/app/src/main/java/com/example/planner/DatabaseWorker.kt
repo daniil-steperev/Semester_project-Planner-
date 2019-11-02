@@ -7,7 +7,9 @@ import com.example.planner.db.Event
 import com.example.planner.db.*
 import java.io.IOException
 
-class DatabaseConnection {
+
+/** Implements specific methods for interaction with app. Wrapper over EventService functionality and TriggerService functionality. */
+class DatabaseWorker {
     private lateinit var mDBHelper: DatabaseHelper
     private lateinit var mDb: SQLiteDatabase
     private var eventService : EventService = EventService()
@@ -36,14 +38,23 @@ class DatabaseConnection {
 
     fun addEvent(e : Event) {
         println("In DBConnection")
-        eventService.addEvent(e, mDb)
+        eventService.addEvent(e, mDb, mDBHelper)
     }
 
-    /*fun readEventsForToday() {
-        //eventService.
-    }*/
+    fun deleteEvent(e : Event) {
+        println("In DBConnection")
+        eventService.deleteEvent(e, mDb, mDBHelper)
+    }
+
+    fun readEventsForToday() : List<Event> {
+        return eventService.readEvent(mDb)
+    }
 
     fun closeConnection() {
         mDBHelper.close()
+    }
+
+    fun readTriggerForToday() : List<Trigger> {
+        return triggerService.readTrigger(mDb, System.currentTimeMillis())
     }
 }

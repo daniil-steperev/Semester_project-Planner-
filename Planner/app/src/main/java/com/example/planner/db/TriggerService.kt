@@ -4,12 +4,9 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 
 class TriggerService {
-    private lateinit var mDb : SQLiteDatabase
-    // FIXME: SELECT OFFER (запрос)
-
-    fun readTrigger(date : Long) : MutableList<Trigger> {
-        // FIXME
-        val cursor = mDb.rawQuery("SELECT * FROM trigger ", null) // FIXME
+    fun readTrigger(mDb : SQLiteDatabase, date : Long) : MutableList<Trigger> {
+        println("HERE TROUBLE")
+        val cursor = mDb.rawQuery("SELECT * FROM triggerTable", null)
         val triggerList = mutableListOf<Trigger>()
 
         cursor.moveToFirst()
@@ -23,11 +20,10 @@ class TriggerService {
         return triggerList
     }
 
-    fun map(cursor : Cursor) : Trigger {
+    private fun map(cursor : Cursor) : Trigger {
         val triggerId = cursor.getString(cursor.getColumnIndex("id")).toLong()
-        val rule = cursor.getString(cursor.getColumnIndex("rule"))
 
-        val triggerRule = when (rule) {
+        val triggerRule = when (cursor.getString(cursor.getColumnIndex("rule"))) {
             "MONDAY" -> TriggerRule.MONDAY
             "TUESDAY" -> TriggerRule.TUESDAY
             "WEDNESDAY" -> TriggerRule.WEDNESDAY
@@ -44,6 +40,6 @@ class TriggerService {
     }
 
     fun addTrigger(newTrigger : Trigger) {
-
+        //FIXME
     }
 }
