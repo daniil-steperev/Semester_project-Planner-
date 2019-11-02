@@ -27,6 +27,7 @@ class EventService {
 
         } catch (e : android.database.sqlite.SQLiteConstraintException){
             println("Such event already exists")
+            mDb.endTransaction()
         }
 
     }

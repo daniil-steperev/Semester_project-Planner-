@@ -90,6 +90,7 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
 
         //connection.readEventsForToday()
         connection.closeConnection()
+        connection.getmDb().close()
 
         contentManager.loadItemsFromStart(eventList)
         agenda_calendar_view.agendaView.agendaListView.setOnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long ->
