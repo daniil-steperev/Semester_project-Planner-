@@ -92,6 +92,7 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         connection.closeConnection()
         connection.getmDb().close()
 
+
         contentManager.loadItemsFromStart(eventList)
         agenda_calendar_view.agendaView.agendaListView.setOnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long ->
             Toast.makeText(view.context, "item: ".plus(position), Toast.LENGTH_SHORT).show()}
