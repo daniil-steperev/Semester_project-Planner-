@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase
 
 class TriggerService {
     fun readTrigger(mDb : SQLiteDatabase, date : Long) : MutableList<Trigger> {
-        println("HERE TROUBLE")
         val cursor = mDb.rawQuery("SELECT * FROM triggerTable", null)
         val triggerList = mutableListOf<Trigger>()
 
@@ -16,7 +15,10 @@ class TriggerService {
             if (newTrigger.suits(date)) {
                 triggerList.add(newTrigger)
             }
+
+            cursor.moveToNext()
         }
+
         return triggerList
     }
 

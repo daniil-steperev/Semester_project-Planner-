@@ -54,8 +54,13 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         var connection = DatabaseWorker()
         connection.setConnection(this)
 
-        //var list = connection.readTriggerForToday()
-        //println("TRIGGER SIZE = ${list.size} ")
+        var list = connection.readTriggerForToday()
+        for (element in list) {
+            println(element.getRule())
+        }
+
+        connection.closeConnection()
+        connection.getmDb().close()
 
         /*for (i in list) {
             println(i.getName() + " " + i.getTime() + " " + i.getDescription())
