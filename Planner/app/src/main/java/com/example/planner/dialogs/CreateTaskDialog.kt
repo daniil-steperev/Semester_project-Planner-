@@ -1,8 +1,6 @@
 package com.example.planner.dialogs
 
-import android.app.Dialog
 import android.os.Bundle
-import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,15 +10,12 @@ import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import com.example.planner.R
 import com.example.planner.Task
-import com.example.planner.db.Trigger
 import com.example.planner.db.TriggerRule
-import java.sql.Date
-import java.sql.Time
 
 class CreateTaskDialog : DialogFragment(), View.OnClickListener {
     var isReady = false;
 
-    private lateinit var task : Task
+    private var task = Task()
 
     private lateinit var addTaskButton : Button
 
@@ -45,7 +40,6 @@ class CreateTaskDialog : DialogFragment(), View.OnClickListener {
         isReady = false
 
         val view = inflater.inflate(R.layout.create_task, null)
-        view.findViewById<Button>(R.id.create_task_button).setOnClickListener(this)
 
         addTaskButton = view.findViewById(R.id.create_task_button)
 
@@ -62,22 +56,35 @@ class CreateTaskDialog : DialogFragment(), View.OnClickListener {
         cBoxEveryDay = view.findViewById(R.id.every_day_repeat)
         cBoxEveryWeek = view.findViewById(R.id.every_week_repeat)
 
+        setOnClick()
+
         return view
     }
 
-    override fun onClick(v: View?) {
-        task = Task()
+    private fun setOnClick() {
+        addTaskButton.setOnClickListener(this)
+        cBoxMonday.setOnClickListener(this)
+        cBoxTuesday.setOnClickListener(this)
+        cBoxWednesday.setOnClickListener(this)
+        cBoxThursday.setOnClickListener(this)
+        cBoxFriday.setOnClickListener(this)
+        cBoxSaturday.setOnClickListener(this)
+        cBoxSunday.setOnClickListener(this)
+        cBoxEveryWeek.setOnClickListener(this)
+        cBoxEveryDay.setOnClickListener(this)
+    }
 
-        when (view) { // FIXME: double click on rule?
-            cBoxMonday -> task.setRule(TriggerRule.MONDAY)
-            cBoxTuesday -> task.setRule(TriggerRule.TUESDAY)
-            cBoxWednesday -> task.setRule(TriggerRule.TUESDAY)
-            cBoxThursday-> task.setRule(TriggerRule.THURSDAY)
-            cBoxFriday -> task.setRule(TriggerRule.FRIDAY)
-            cBoxSaturday -> task.setRule(TriggerRule.SATURDAY)
-            cBoxSunday -> task.setRule(TriggerRule.SUNDAY)
-            cBoxEveryDay -> task.setRule(TriggerRule.DAILY)
-            cBoxEveryWeek -> task.setRule(TriggerRule.WEEKLY)
+    override fun onClick(v: View?) {
+        when (v) {
+            cBoxMonday -> addOrRemoveRule(TriggerRule.MONDAY)
+            cBoxTuesday -> addOrRemoveRule(TriggerRule.TUESDAY)
+            cBoxWednesday -> addOrRemoveRule(TriggerRule.WEDNESDAY)
+            cBoxThursday-> addOrRemoveRule(TriggerRule.THURSDAY)
+            cBoxFriday -> addOrRemoveRule(TriggerRule.FRIDAY)
+            cBoxSaturday -> addOrRemoveRule(TriggerRule.SATURDAY)
+            cBoxSunday -> addOrRemoveRule(TriggerRule.SUNDAY)
+            cBoxEveryDay -> addOrRemoveRule(TriggerRule.DAILY)
+            cBoxEveryWeek -> addOrRemoveRule(TriggerRule.WEEKLY)
 
             addTaskButton -> {
                 val time = timeEditor.text.toString()
@@ -85,12 +92,22 @@ class CreateTaskDialog : DialogFragment(), View.OnClickListener {
 
                 task.setTask(taskName)
                 task.setTime(time)
+
+                isReady = true
             }
         }
     }
 
+    private fun addOrRemoveRule(rule : TriggerRule) {
+        if (task.isRuleContains(rule)) {
+            task.removeRule(rule)
+        } else {
+            task.addRule(rule)
+        }
+    }
+
     fun getTask() : Task {
-        isReady = true
+        dismiss()
         return task
     }
 }

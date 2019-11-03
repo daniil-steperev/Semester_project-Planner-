@@ -3,4 +3,15 @@
     <string name="create_time">Time</string>
     <string name="task_name">Task</string>
     <string name="create_task_button">Add</string>
+    <string name="repeatness">Repeatness</string>
+
+    <string name="Monday">Monday</string>
+    <string name="Tuesday">Tuesday</string>
+    <string name="Wednesday">Wednesday</string>
+    <string name="Thursday">Thursday</string>
+    <string name="Friday">Friday</string>
+    <string name="Saturday">Saturday</string>
+    <string name="Sunday">Sunday</string>
+    <string name="every_day">Every day</string>
+    <string name="every_week">Every week</string>
 </resources>

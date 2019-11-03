@@ -18,7 +18,6 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var addButton : Button
     private lateinit var deleteButton : Button
     private lateinit var addedTasks : ArrayList<Task>
-    private lateinit var createTaskDialog : CreateTaskDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +28,6 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
         deleteButton = findViewById(R.id.delete_button)
         addedTasks = getAddedTasks()
 
-        createTaskDialog = CreateTaskDialog()
-
         addButton.setOnClickListener(this)
         deleteButton.setOnClickListener(this)
     }
@@ -39,25 +36,11 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.add_button -> {
-
+                val createTaskDialog = CreateTaskDialog()
                 createTaskDialog.show(supportFragmentManager, "createTaskDialog")
+                var newTask = createTaskDialog.getTask()
 
-                val lParams = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-
-                // addedTasks.add(createTaskDialog.getTask()) // add new task FIXME
-
-                addedTasks.sort() // sort tasks
-                if (llMain.size > 0) { // remove other tasks if they present
-                    llMain.removeAllViews()
-                }
-
-                for (task in addedTasks) { // add task in right order
-                    val newLine = getNewTaskLine(task.getTime(), task.getTask())
-                    llMain.addView(newLine, lParams)
-                }
+                addToTaskList(newTask)
             }
 
             R.id.delete_button -> {
@@ -66,6 +49,27 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
                     addedTasks.remove(addedTasks.get(addedTasks.lastIndex))
                 }
                 Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun addToTaskList(newTask : Task) {
+        val lParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        addedTasks.add(newTask)
+
+        if (addedTasks.size != 0) {
+            addedTasks.sort() // sort tasks
+            if (llMain.size > 0) { // remove other tasks if they present
+                llMain.removeAllViews()
+            }
+
+            for (task in addedTasks) { // add task in right order
+                val newLine = getNewTaskLine(task.getTime(), task.getTask())
+                llMain.addView(newLine, lParams)
             }
         }
     }

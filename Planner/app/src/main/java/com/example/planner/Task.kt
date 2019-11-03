@@ -5,9 +5,9 @@ import java.sql.Time
 import java.util.*
 
 class Task(private var date: Date, private var time: Time, private var task: String,
-           private var rule : TriggerRule) : Comparable<Task> {
+           private var rule : MutableList<TriggerRule>) : Comparable<Task> {
 
-    constructor() : this(Date(), Time .valueOf("11.11.11"), "", TriggerRule.DAILY) {}
+    constructor() : this(Date(), Time .valueOf("11:11:11"), "", mutableListOf()) {}
 
     fun getDate() : Date {
         return date;
@@ -21,7 +21,7 @@ class Task(private var date: Date, private var time: Time, private var task: Str
         return task;
     }
 
-    fun getRule() : TriggerRule {
+    fun getRule() : MutableList<TriggerRule> {
         return rule;
     }
 
@@ -34,6 +34,7 @@ class Task(private var date: Date, private var time: Time, private var task: Str
     }
 
     fun setTime(time : String) {
+        println("PROOOOOOBLEM IS TIIIIIIME!!!!!")
         this.time = Time.valueOf(time)
     }
 
@@ -41,8 +42,16 @@ class Task(private var date: Date, private var time: Time, private var task: Str
         this.task = task;
     }
 
-    fun setRule(rule : TriggerRule) {
-        this.rule = rule
+    fun addRule(rule : TriggerRule) {
+        this.rule.add(rule)
+    }
+
+    fun removeRule(rule : TriggerRule) {
+        this.rule.remove(rule)
+    }
+
+    fun isRuleContains(newRule : TriggerRule) : Boolean {
+        return rule.contains(newRule)
     }
 
     override fun compareTo(otherTask : Task): Int {
