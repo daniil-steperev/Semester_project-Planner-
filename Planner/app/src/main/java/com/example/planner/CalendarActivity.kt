@@ -17,8 +17,6 @@ import kotlinx.android.synthetic.main.activity_calendar.*
 
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.time.days
-import kotlin.time.milliseconds
 
 class CalendarActivity : AppCompatActivity(), CalendarController {
 
@@ -62,11 +60,10 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         connection.closeConnection()
         connection.getmDb().close()
 
-        /*for (i in list) {
-            println(i.getName() + " " + i.getTime() + " " + i.getDescription())
-        }*/
-
-
+        contentManager.loadItemsFromStart(eventList)
+        agenda_calendar_view.agendaView.agendaListView.setOnItemClickListener { _: AdapterView<*>, view: View, position: Int, id: Long ->
+            Toast.makeText(view.context, "item: ".plus(position), Toast.LENGTH_SHORT).show()
+        }
     }
 
     override fun onStop() {

@@ -40,8 +40,4 @@ class TriggerService {
 
         return Trigger(triggerId, triggerRule)
     }
-
-    fun addTrigger(newTrigger : Trigger) {
-        //FIXME
-    }
 }
