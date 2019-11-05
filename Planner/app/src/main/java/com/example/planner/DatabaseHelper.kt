@@ -63,7 +63,6 @@ class DatabaseHelper(private val mContext: Context) :
     @Throws(IOException::class)
     private fun copyDBFile() {
         val mInput = mContext.assets.open(DB_NAME)
-        //InputStream mInput = mContext.getResources().openRawResource(R.raw.info);
         val mOutput = FileOutputStream(DB_PATH + DB_NAME)
         val mBuffer = ByteArray(1024)
         var mLength: Int = mInput.read(mBuffer)
@@ -102,6 +101,6 @@ class DatabaseHelper(private val mContext: Context) :
     companion object {
         private val DB_NAME = "info.db"
         private var DB_PATH = ""
-        private val DB_VERSION = 3
+        private val DB_VERSION = 8
     }
 }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="create_time">Time</string>
+    <string name="task_name">Task</string>
+    <string name="create_task_button">Add</string>
+</resources>

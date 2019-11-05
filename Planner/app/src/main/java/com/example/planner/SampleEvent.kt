@@ -6,4 +6,3 @@ package com.example.planner
  * to this class from backend
  */
 data class SampleEvent(val id: Long = 0, val name: String, val description: String)
-
