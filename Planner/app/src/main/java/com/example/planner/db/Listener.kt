@@ -19,6 +19,7 @@ class Listener {
                 mDb.execSQL(insertQuery)
             }
 
+            mDb.setTransactionSuccessful()
             mDb.endTransaction()
         } catch (e : android.database.sqlite.SQLiteConstraintException) {
             println("Can't add to listener table.")
@@ -34,6 +35,7 @@ class Listener {
         cursor.moveToFirst()
         while (!cursor.isAfterLast) {
             println(cursor.getString(cursor.getColumnIndex("trigger_id")))
+            cursor.moveToNext()
         }
     }
 }
