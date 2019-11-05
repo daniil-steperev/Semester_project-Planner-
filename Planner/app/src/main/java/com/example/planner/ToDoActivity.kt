@@ -47,7 +47,11 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 )
 
-                // addedTasks.add(createTaskDialog.getTask()) // add new task FIXME
+                while (!createTaskDialog.isReady) {
+                    // FIXME: DO SOMETHING?!
+                }
+
+                addedTasks.add(createTaskDialog.getTask()) // add new task FIXME
 
                 addedTasks.sort() // sort tasks
                 if (llMain.size > 0) { // remove other tasks if they present

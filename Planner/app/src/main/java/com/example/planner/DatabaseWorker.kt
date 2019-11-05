@@ -53,4 +53,8 @@ class DatabaseWorker {
     fun closeConnection() {
         mDBHelper.close()
     }
+
+    fun readTriggerForToday() : List<Trigger> {
+        return triggerService.readTrigger(mDb, System.currentTimeMillis())
+    }
 }
