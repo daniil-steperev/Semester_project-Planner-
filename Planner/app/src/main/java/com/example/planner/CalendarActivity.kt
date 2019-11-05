@@ -7,6 +7,9 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.planner.db.Event
+import com.example.planner.db.Listener
+import com.example.planner.db.Trigger
+import com.example.planner.db.TriggerService
 import com.ognev.kotlin.agendacalendarview.CalendarController
 import com.ognev.kotlin.agendacalendarview.CalendarManager
 import com.ognev.kotlin.agendacalendarview.builder.CalendarContentManager
@@ -57,30 +60,21 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         var event = Event()
         event.setName("English")
         event.setDescription("Problem-solution essay")
-        event.setTime(1367701200000)
+        event.setTime(System.currentTimeMillis())
 
         connection.addEvent(event)
 
-        var list : List<Event> =  connection.readEventsForToday()
+        val triggers = connection.readTriggerForToday()
 
-        /*for (i in list) {
-            println(i.getName() + " " + i.getTime() + " " + i.getDescription())
-        }*/
+        val listener = Listener()
+        listener.addEvent(connection.getmDb(), event, triggers)
 
-        for (i in list) {
-            val day = Calendar.getInstance(Locale.ENGLISH)
-            day.timeInMillis = i.getTime()
-            eventList.add(MyCalendarEvent(day, day,
-                DayItem.buildDayItemFromCal(day), SampleEvent(0, name = i.getName(), description = i.getDescription())).setEventInstanceDay(day))
-        }
+        listener.readAddedEvents(connection.getmDb())
 
         connection.closeConnection()
         connection.getmDb().close()
 
         contentManager.loadItemsFromStart(eventList)
-        agenda_calendar_view.agendaView.agendaListView.setOnItemClickListener({ parent: AdapterView<*>, view: View, position: Int, id: Long ->
-            Toast.makeText(view.context, "item: ".plus(position), Toast.LENGTH_SHORT).show()
-        })
     }
 
     override fun onStop() {

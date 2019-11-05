@@ -15,14 +15,25 @@ class Listener {
                 cursor.moveToFirst()
                 val triggerID = cursor.getInt(0)
 
-                val insertQuery = "INSERT INTO listener (trigger_id, event_id) VALUES($triggerID, $eventID, \"type\")"
+                val insertQuery = "INSERT INTO listener (trigger_id, event_id, type) VALUES($triggerID, $eventID, 'type')"
                 mDb.execSQL(insertQuery)
             }
 
             mDb.endTransaction()
         } catch (e : android.database.sqlite.SQLiteConstraintException) {
-            println()
+            println("Can't add to listener table.")
             mDb.endTransaction()
+        }
+    }
+
+    //FIXME
+    fun readAddedEvents(mDb : SQLiteDatabase) {
+        val cursor = mDb.rawQuery("SELECT * FROM listener", null)
+
+        println("IN LISTENER")
+        cursor.moveToFirst()
+        while (!cursor.isAfterLast) {
+            println(cursor.getString(cursor.getColumnIndex("trigger_id")))
         }
     }
 }

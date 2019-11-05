@@ -54,7 +54,7 @@ class DatabaseWorker {
         mDBHelper.close()
     }
 
-    fun readTriggerForToday() : List<Trigger> {
+    fun readTriggerForToday() : MutableList<Trigger> {
         return triggerService.readTrigger(mDb, System.currentTimeMillis())
     }
 }
