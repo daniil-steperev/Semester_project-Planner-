@@ -1,20 +1,31 @@
 package com.example.planner.db
 
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 
 class TriggerService {
-    // FIXME: SELECT OFFER (запрос)
+    fun readTrigger(mDb : SQLiteDatabase, date : Long) : MutableList<Trigger> {
+        val cursor = mDb.rawQuery("SELECT * FROM triggerTable", null)
+        val triggerList = mutableListOf<Trigger>()
 
-    fun readTrigger(date : Long) : MutableList<Trigger> {
-        // FIXME
-        return mutableListOf()
+        cursor.moveToFirst()
+        while (!cursor.isAfterLast) {
+            val newTrigger = map(cursor)
+
+            if (newTrigger.suits(date)) {
+                triggerList.add(newTrigger)
+            }
+
+            cursor.moveToNext()
+        }
+
+        return triggerList
     }
 
-    fun map(cursor : Cursor) : Trigger {
+    private fun map(cursor : Cursor) : Trigger {
         val triggerId = cursor.getString(cursor.getColumnIndex("id")).toLong()
-        val rule = cursor.getString(cursor.getColumnIndex("rule"))
 
-        val triggerRule = when (rule) {
+        val triggerRule = when (cursor.getString(cursor.getColumnIndex("rule"))) {
             "MONDAY" -> TriggerRule.MONDAY
             "TUESDAY" -> TriggerRule.TUESDAY
             "WEDNESDAY" -> TriggerRule.WEDNESDAY
