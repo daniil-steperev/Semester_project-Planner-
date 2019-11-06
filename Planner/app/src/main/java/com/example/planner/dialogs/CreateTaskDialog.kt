@@ -1,5 +1,6 @@
 package com.example.planner.dialogs
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,9 +11,10 @@ import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import com.example.planner.R
 import com.example.planner.Task
+import com.example.planner.ToDoActivity
 import com.example.planner.db.TriggerRule
 
-class CreateTaskDialog : DialogFragment(), View.OnClickListener {
+class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(), View.OnClickListener {
     var isReady = false;
 
     private var task = Task()
@@ -93,7 +95,9 @@ class CreateTaskDialog : DialogFragment(), View.OnClickListener {
                 task.setTask(taskName)
                 task.setTime(time)
 
-                isReady = true
+                toDoActivity.addToTaskList(task)
+
+                dismiss() // close create task dialog fragment
             }
         }
     }
@@ -104,10 +108,5 @@ class CreateTaskDialog : DialogFragment(), View.OnClickListener {
         } else {
             task.addRule(rule)
         }
-    }
-
-    fun getTask() : Task {
-        dismiss()
-        return task
     }
 }

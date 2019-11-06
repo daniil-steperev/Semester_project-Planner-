@@ -36,11 +36,8 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.add_button -> {
-                val createTaskDialog = CreateTaskDialog()
+                val createTaskDialog = CreateTaskDialog(this)
                 createTaskDialog.show(supportFragmentManager, "createTaskDialog")
-                var newTask = createTaskDialog.getTask()
-
-                addToTaskList(newTask)
             }
 
             R.id.delete_button -> {
@@ -53,7 +50,7 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun addToTaskList(newTask : Task) {
+    fun addToTaskList(newTask : Task) {
         val lParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
