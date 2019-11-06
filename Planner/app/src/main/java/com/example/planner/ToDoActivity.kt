@@ -3,10 +3,13 @@ package com.example.planner
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.get
+import androidx.core.view.setPadding
 import androidx.core.view.size
 import com.example.planner.dialogs.CreateTaskDialog
 import java.sql.Time
@@ -76,10 +79,15 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
         newLine.orientation = LinearLayout.HORIZONTAL
 
         val time = TextView(this)
+        time.setPadding(5)
         time.text = timeText.toString()
+        time.textSize = 26.toFloat()
 
         val task = TextView(this)
+        task.setPadding(5)
+        task.gravity = Gravity.LEFT
         task.text = taskText
+        task.textSize = 26.toFloat()
 
         val timeLayoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
