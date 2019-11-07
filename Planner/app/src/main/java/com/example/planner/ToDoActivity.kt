@@ -3,7 +3,6 @@ package com.example.planner
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -81,18 +80,18 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
         val time = TextView(this)
         time.setPadding(5)
         time.text = timeText.toString()
-        time.textSize = 26.toFloat()
+        time.textSize = 20.toFloat()
 
         val task = TextView(this)
         task.setPadding(5)
-        task.gravity = Gravity.LEFT
+        task.gravity = Gravity.CENTER
         task.text = taskText
-        task.textSize = 26.toFloat()
+        task.textSize = 20.toFloat()
 
-        val timeLayoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        val timeLayoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
 
-        val taskLayoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        val taskLayoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT, 3f)
 
         newLine.addView(time, timeLayoutParams)

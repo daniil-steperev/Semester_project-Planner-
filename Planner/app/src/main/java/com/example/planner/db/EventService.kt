@@ -1,6 +1,7 @@
 package com.example.planner.db
 
 import android.database.Cursor
+import android.database.sqlite.SQLiteConstraintException
 import com.example.planner.DatabaseHelper
 import android.database.sqlite.SQLiteDatabase
 import java.util.*
@@ -23,7 +24,7 @@ class EventService {
 
             mDb.endTransaction()
 
-        } catch (e : android.database.sqlite.SQLiteConstraintException){
+        } catch (e : SQLiteConstraintException){
             println("Such event already exists")
             mDb.endTransaction()
         }
