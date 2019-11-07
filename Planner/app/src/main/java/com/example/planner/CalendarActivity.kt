@@ -57,7 +57,7 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         var event = Event()
         event.setName("English")
         event.setDescription("Problem-solution essay")
-        event.setTime(1367701200000)
+        event.setTime(1573143832238)
 
         connection.addEvent(event)
 
