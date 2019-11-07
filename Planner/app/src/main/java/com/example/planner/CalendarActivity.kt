@@ -7,6 +7,9 @@ import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.planner.db.Event
+import com.example.planner.db.Listener
+import com.example.planner.db.Trigger
+import com.example.planner.db.TriggerService
 import com.ognev.kotlin.agendacalendarview.CalendarController
 import com.ognev.kotlin.agendacalendarview.CalendarManager
 import com.ognev.kotlin.agendacalendarview.builder.CalendarContentManager
@@ -57,9 +60,15 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         var event = Event()
         event.setName("English")
         event.setDescription("Problem-solution essay")
-        event.setTime(1573143832238)
-
+        event.setTime(1573145514481)
         connection.addEvent(event)
+
+        val triggers = connection.readTriggerForToday()
+
+        val listener = Listener()
+        listener.addEvent(connection.getmDb(), event, triggers)
+
+        listener.readAddedEvents(connection.getmDb())
 
         var list : List<Event> =  connection.readEventsForToday()
 
@@ -78,9 +87,6 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         connection.getmDb().close()
 
         contentManager.loadItemsFromStart(eventList)
-        agenda_calendar_view.agendaView.agendaListView.setOnItemClickListener({ parent: AdapterView<*>, view: View, position: Int, id: Long ->
-            Toast.makeText(view.context, "item: ".plus(position), Toast.LENGTH_SHORT).show()
-        })
     }
 
     override fun onStop() {
