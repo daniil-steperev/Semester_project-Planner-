@@ -17,6 +17,10 @@ class Trigger {
         return rule
     }
 
+    fun getID() : Long {
+        return id
+    }
+
     fun suits(date : Long) : Boolean {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = date

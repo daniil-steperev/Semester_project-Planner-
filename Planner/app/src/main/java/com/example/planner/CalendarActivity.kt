@@ -51,7 +51,7 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         contentManager.locale = Locale.ENGLISH
         contentManager.setDateRange(minDate, maxDate)
 
-        var connection = DatabaseWorker()
+        /*var connection = DatabaseWorker()
         connection.setConnection(this)
 
         var event = Event()
@@ -62,20 +62,16 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         var chosenTriggers : MutableList<Trigger> = LinkedList<Trigger>()
         chosenTriggers.add(Trigger(1, TriggerRule.MONDAY))
         //trigger = "MONDAY"
-        connection.addEvent(event, chosenTriggers)
+        connection.addEvent(event, chosenTriggers)*/
 
-        /*val triggers = connection.readTriggerForToday()
-
-        val listener = Listener()
-        listener.addEvent(connection.getmDb(), event, triggers)
-
-        listener.readAddedEvents(connection.getmDb())*/
-
-        var list : List<Event> =  connection.readEventsForToday()
+        //var list : List<Event> =  connection.readEventsForToday()
 
         /*for (i in list) {
             println(i.getName() + " " + i.getTime() + " " + i.getDescription())
         }*/
+
+        /*val day = Calendar.getInstance()
+
 
         for (i in list) {
             val day = Calendar.getInstance(Locale.ENGLISH)
@@ -87,6 +83,17 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         connection.closeConnection()
         connection.getmDb().close()
 
+        /*
+        val maxLength = Calendar.getInstance().getMaximum(Calendar.DAY_OF_MONTH)
+
+        for (i in 1..maxLength) {
+            val day = Calendar.getInstance(Locale.ENGLISH)
+            day.timeInMillis = System.currentTimeMillis()
+            day.set(Calendar.DAY_OF_MONTH, i)
+
+            eventList.add(MyCalendarEvent(day, day,
+                DayItem.buildDayItemFromCal(day), null).setEventInstanceDay(day))
+        }*/
         contentManager.loadItemsFromStart(eventList)
     }
 
@@ -144,7 +151,7 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         }
 
         override fun doInBackground(vararg params: Unit?) {
-            Thread.sleep(2000) // simulating requesting json via rest api
+            Thread.sleep(20) // simulating requesting json via rest api
 
             if (addFromStart) {
                 if (startMonth == 0) {

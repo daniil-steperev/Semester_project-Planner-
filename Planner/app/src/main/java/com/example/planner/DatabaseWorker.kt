@@ -47,7 +47,8 @@ class DatabaseWorker {
     }
 
     fun readEventsForToday() : List<Event> {
-        return eventService.readEvent(mDb)
+        val triggers = readTriggerForToday()
+        return eventService.readEvent(triggers, mDb)
     }
 
     fun closeConnection() {

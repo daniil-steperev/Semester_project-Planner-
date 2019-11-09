@@ -42,10 +42,18 @@ class EventService {
 
 
     // FIXME: add handling list of triggers!
-    fun readEvent(/*list : MutableList<Trigger>,*/ mDb : SQLiteDatabase) : MutableList<Event> {
-        val cursor = mDb.rawQuery("SELECT * FROM event",null)
+    fun readEvent(list : MutableList<Trigger>, mDb : SQLiteDatabase) : MutableList<Event> {
         var events : MutableList<Event> = LinkedList<Event>()
-        cursor.moveToFirst()
+        for (i in list) {
+            val cursor1 = mDb.rawQuery("SELECT * FROM listener WHERE trigger_id = ${i.getID()}",null)
+            var event_id = cursor1.getLong(cursor1.getColumnIndex("event_id"))
+            val cursor2 = mDb.rawQuery("SELECT * FROM event_param WHERE event_id = $event_id", null)
+            var event : Event = mapEvent(cursor2, mDb)
+            println("Event : " + event.getID() + " " + event.getDescription() + "  " + event.getTime() + " " + event.getName())
+            events.add(mapEvent(cursor2, mDb))
+            cursor1.moveToNext()
+        }
+        /*cursor.moveToFirst()
         while (!cursor.isAfterLast) {
             events.add(mapEvent(cursor, mDb))
             cursor.moveToNext()
@@ -54,7 +62,8 @@ class EventService {
         for (i in events) {
             var result : String = "${i.getID()}  ${i.getName()} + ${i.getDescription()} + ${i.getTime()}"
             println(result)
-        }
+        }*/
+
         return events
     }
 
