@@ -6,10 +6,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.planner.db.Event
-import com.example.planner.db.Listener
-import com.example.planner.db.Trigger
-import com.example.planner.db.TriggerService
+import com.example.planner.db.*
 import com.ognev.kotlin.agendacalendarview.CalendarController
 import com.ognev.kotlin.agendacalendarview.CalendarManager
 import com.ognev.kotlin.agendacalendarview.builder.CalendarContentManager
@@ -61,14 +58,18 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         event.setName("English")
         event.setDescription("Problem-solution essay")
         event.setTime(1573145514481)
-        connection.addEvent(event)
 
-        val triggers = connection.readTriggerForToday()
+        var chosenTriggers : MutableList<Trigger> = LinkedList<Trigger>()
+        chosenTriggers.add(Trigger(1, TriggerRule.MONDAY))
+        //trigger = "MONDAY"
+        connection.addEvent(event, chosenTriggers)
+
+        /*val triggers = connection.readTriggerForToday()
 
         val listener = Listener()
         listener.addEvent(connection.getmDb(), event, triggers)
 
-        listener.readAddedEvents(connection.getmDb())
+        listener.readAddedEvents(connection.getmDb())*/
 
         var list : List<Event> =  connection.readEventsForToday()
 

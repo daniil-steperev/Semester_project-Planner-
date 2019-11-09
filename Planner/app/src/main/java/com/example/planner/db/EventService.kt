@@ -6,7 +6,9 @@ import android.database.sqlite.SQLiteDatabase
 import java.util.*
 
 class EventService {
-    fun addEvent(e : Event, mDb : SQLiteDatabase, dbHelper : DatabaseHelper) {
+    //private var listener : Listener = Listener()
+
+    fun addEvent(e : Event, mDb : SQLiteDatabase, dbHelper : DatabaseHelper, triggers : MutableList<Trigger>) {
         try {
             val query1 = "INSERT INTO event (name) VALUES(\"${e.getName()}\"); "
             mDb.beginTransaction()
@@ -22,6 +24,9 @@ class EventService {
             mDb.execSQL(query2)
 
             mDb.endTransaction()
+
+            val listener = Listener()
+            listener.addEvent(mDb, e, triggers)
 
         } catch (e : android.database.sqlite.SQLiteConstraintException){
             println("Such event already exists")
