@@ -64,6 +64,7 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         //trigger = "MONDAY"
         connection.addEvent(event, chosenTriggers)
 
+        println("Events actual for 14 november")
         var list : List<Event> =  connection.readEventsForToday(1573678800000)
         for (i in list) {
             println(i.getName() + " " + i.getTime() + " " + i.getDescription())
