@@ -64,7 +64,28 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         //trigger = "MONDAY"
         connection.addEvent(event, chosenTriggers)
 
-        println("Events actual for 14 november")
+        /*var date1 : Date = Date(minDate.timeInMillis)
+        println("mindate" + minDate.timeInMillis + " " + date1.year + " " + date1.month + " " + date1.day )
+        var date2 : Date = Date(maxDate.timeInMillis)
+        println("maxdate" + " " + minDate.timeInMillis + " " + date2.year + " " + date2.month + " " + date2.day )*/
+
+        val day = Calendar.getInstance()
+
+        var initDay = minDate.timeInMillis
+        var count : Int = 0
+        while (initDay < maxDate.timeInMillis) {
+            var list : List<Event> =  connection.readEventsForToday(initDay)
+            val day = Calendar.getInstance()
+            //count++
+            for (i in list) {
+                val day = Calendar.getInstance(Locale.ENGLISH)
+                day.timeInMillis = initDay
+                eventList.add(MyCalendarEvent(day, day,
+                    DayItem.buildDayItemFromCal(day), SampleEvent(0, name = i.getName(), description = i.getDescription())).setEventInstanceDay(day))
+            }
+            initDay += 86400000
+        }
+        /*println("Events actual for 14 november")
         var list : List<Event> =  connection.readEventsForToday(1573678800000)
         for (i in list) {
             println(i.getName() + " " + i.getTime() + " " + i.getDescription())
@@ -78,7 +99,7 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
             day.timeInMillis = i.getTime()
             eventList.add(MyCalendarEvent(day, day,
                 DayItem.buildDayItemFromCal(day), SampleEvent(0, name = i.getName(), description = i.getDescription())).setEventInstanceDay(day))
-        }
+        }*/
 
         connection.closeConnection()
         connection.getmDb().close()
