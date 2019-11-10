@@ -46,12 +46,18 @@ class EventService {
         var events : MutableList<Event> = LinkedList<Event>()
         for (i in list) {
             val cursor1 = mDb.rawQuery("SELECT * FROM listener WHERE trigger_id = ${i.getID()}",null)
-            var event_id = cursor1.getLong(cursor1.getColumnIndex("event_id"))
-            val cursor2 = mDb.rawQuery("SELECT * FROM event_param WHERE event_id = $event_id", null)
-            var event : Event = mapEvent(cursor2, mDb)
-            println("Event : " + event.getID() + " " + event.getDescription() + "  " + event.getTime() + " " + event.getName())
-            events.add(mapEvent(cursor2, mDb))
-            cursor1.moveToNext()
+            cursor1.moveToFirst()
+            while (!cursor1.isAfterLast) {
+                var event_id = cursor1.getLong(cursor1.getColumnIndex("event_id"))
+                val cursor2 = mDb.rawQuery("SELECT * FROM event WHERE id = $event_id", null)
+                cursor2.moveToFirst()
+                var event : Event = mapEvent(cursor2, mDb)
+                println("Event : " + event.getID() + " " + event.getDescription() + "  " + event.getTime() + " " + event.getName())
+                events.add(mapEvent(cursor2, mDb))
+                cursor1.moveToNext()
+                cursor2.close()
+            }
+            cursor1.close()
         }
         /*cursor.moveToFirst()
         while (!cursor.isAfterLast) {

@@ -46,8 +46,8 @@ class DatabaseWorker {
         eventService.deleteEvent(e, mDb, mDBHelper)
     }
 
-    fun readEventsForToday() : List<Event> {
-        val triggers = readTriggerForToday()
+    fun readEventsForToday(date : Long) : List<Event> {
+        val triggers = triggerService.readTrigger(mDb, date)
         return eventService.readEvent(triggers, mDb)
     }
 
