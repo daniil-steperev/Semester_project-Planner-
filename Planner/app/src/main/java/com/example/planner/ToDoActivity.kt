@@ -21,6 +21,8 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var deleteButton : Button
     private lateinit var addedTasks : ArrayList<Task>
 
+    private lateinit var currentDate: CurrentDate
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo)
@@ -30,8 +32,20 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
         deleteButton = findViewById(R.id.delete_button)
         addedTasks = getAddedTasks()
 
+        initializeDate()
+
         addButton.setOnClickListener(this)
         deleteButton.setOnClickListener(this)
+    }
+
+    private fun initializeDate() {
+        val day = findViewById<TextView>(R.id.day)
+        val month = findViewById<TextView>(R.id.month)
+        val dayOfWeek = findViewById<TextView>(R.id.day_of_week)
+        val time = findViewById<TextView>(R.id.time)
+
+        currentDate = CurrentDate(day, month, dayOfWeek, time)
+        currentDate.create()
     }
 
     @SuppressLint("ResourceType")
@@ -106,5 +120,18 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
 
         tasks.sort()
         return arrayListOf()
+    }
+
+    inner class TimeThread : Thread() {
+        override fun run() {
+            try {
+                while (!isInterrupted) {
+                    sleep(1000)
+                    runOnUiThread(Runnable { currentDate.updateDate() })
+                }
+            } catch (e : InterruptedException) {
+                println("Exception in TimeThread!")
+            }
+        }
     }
 }
