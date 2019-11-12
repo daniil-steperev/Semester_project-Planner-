@@ -72,26 +72,6 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
             throw mSQLException
         }
 
-        var product = ""
-
-        val cursor = mDb.rawQuery("SELECT * FROM tasks", null, null)
-        cursor.moveToFirst()
-        var i: Int = 0
-        while (!cursor.isAfterLast) {
-            val day = Calendar.getInstance(Locale.ENGLISH)
-            day.timeInMillis = cursor.getLong(1)
-            eventList.add(
-                MyCalendarEvent(
-                    day, day,
-                    DayItem.buildDayItemFromCal(day), SampleEvent(0, cursor.getString(2), "")
-                ).setEventInstanceDay(day)
-            )
-            cursor.moveToNext()
-        }
-        cursor.close()
-
-        println(product)
-
         contentManager.loadItemsFromStart(eventList)
         agenda_calendar_view.agendaView.agendaListView.setOnItemClickListener { parent: AdapterView<*>, view: View, position: Int, id: Long ->
             Toast.makeText(view.context, "item: ".plus(position), Toast.LENGTH_SHORT).show()}

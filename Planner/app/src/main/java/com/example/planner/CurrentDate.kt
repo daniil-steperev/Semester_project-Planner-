@@ -12,13 +12,6 @@ class CurrentDate(
     private var dayOfWeek: TextView,
     private var time: TextView
 ) {
-    lateinit var timeThread : TimeThread
-
-    fun create() {
-        timeThread = ToDoActivity().TimeThread()
-        timeThread.start()
-    }
-
     fun updateDate() {
         val calendar = GregorianCalendar()
         calendar.timeInMillis = System.currentTimeMillis()

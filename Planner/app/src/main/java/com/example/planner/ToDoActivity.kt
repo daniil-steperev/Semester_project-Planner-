@@ -22,6 +22,7 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var addedTasks : ArrayList<Task>
 
     private lateinit var currentDate: CurrentDate
+    private lateinit var timeThread : TimeThread
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +46,9 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
         val time = findViewById<TextView>(R.id.time)
 
         currentDate = CurrentDate(day, month, dayOfWeek, time)
-        currentDate.create()
+        currentDate.updateDate()
+        timeThread = TimeThread()
+        timeThread.start()
     }
 
     @SuppressLint("ResourceType")
