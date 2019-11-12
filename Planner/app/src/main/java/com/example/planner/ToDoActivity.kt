@@ -1,24 +1,31 @@
 package com.example.planner
 
 import android.annotation.SuppressLint
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
+import androidx.core.view.setPadding
 import androidx.core.view.size
 import com.example.planner.dialogs.CreateTaskDialog
 import java.sql.Time
-import kotlin.collections.ArrayList
 
 @Suppress("DEPRECATION")
 class ToDoActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var llMain : LinearLayout
     private lateinit var addButton : Button
     private lateinit var deleteButton : Button
+
     private lateinit var addedTasks : ArrayList<Task>
-    private lateinit var createTaskDialog : CreateTaskDialog
+
+    private lateinit var currentDate: CurrentDate
+    private lateinit var timeThread : TimeThread
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,39 +36,30 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
         deleteButton = findViewById(R.id.delete_button)
         addedTasks = getAddedTasks()
 
-        createTaskDialog = CreateTaskDialog()
+        initializeDate()
 
         addButton.setOnClickListener(this)
         deleteButton.setOnClickListener(this)
+    }
+
+    private fun initializeDate() {
+        val day = findViewById<TextView>(R.id.day)
+        val month = findViewById<TextView>(R.id.month)
+        val dayOfWeek = findViewById<TextView>(R.id.day_of_week)
+        val time = findViewById<TextView>(R.id.time)
+
+        currentDate = CurrentDate(day, month, dayOfWeek, time)
+        currentDate.updateDate()
+        timeThread = TimeThread()
+        timeThread.start()
     }
 
     @SuppressLint("ResourceType")
     override fun onClick(v: View) {
         when (v.id) {
             R.id.add_button -> {
-
+                val createTaskDialog = CreateTaskDialog(this)
                 createTaskDialog.show(supportFragmentManager, "createTaskDialog")
-
-                val lParams = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-
-                while (!createTaskDialog.isReady) {
-                    // FIXME: DO SOMETHING?!
-                }
-
-                addedTasks.add(createTaskDialog.getTask()) // add new task FIXME
-
-                addedTasks.sort() // sort tasks
-                if (llMain.size > 0) { // remove other tasks if they present
-                    llMain.removeAllViews()
-                }
-
-                for (task in addedTasks) { // add task in right order
-                    val newLine = getNewTaskLine(task.getTime(), task.getTask())
-                    llMain.addView(newLine, lParams)
-                }
             }
 
             R.id.delete_button -> {
@@ -74,20 +72,46 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    fun addToTaskList(newTask : Task) {
+        val lParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        addedTasks.add(newTask)
+
+        if (addedTasks.size != 0) {
+            addedTasks.sort() // sort tasks
+            if (llMain.size > 0) { // remove other tasks if they present
+                llMain.removeAllViews()
+            }
+
+            for (task in addedTasks) { // add task in right order
+                val newLine = getNewTaskLine(task.getTime(), task.getTask())
+                llMain.addView(newLine, lParams)
+            }
+        }
+    }
+
     private fun getNewTaskLine(timeText : Time, taskText : String) : LinearLayout {
         val newLine = LinearLayout(this)
         newLine.orientation = LinearLayout.HORIZONTAL
 
         val time = TextView(this)
+        time.setPadding(5)
         time.text = timeText.toString()
+        time.textSize = 20.toFloat()
 
         val task = TextView(this)
+        task.setPadding(5)
+        task.gravity = Gravity.CENTER
         task.text = taskText
+        task.textSize = 20.toFloat()
 
-        val timeLayoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        val timeLayoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
 
-        val taskLayoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        val taskLayoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT, 3f)
 
         newLine.addView(time, timeLayoutParams)
@@ -102,5 +126,18 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
 
         tasks.sort()
         return arrayListOf()
+    }
+
+    inner class TimeThread : Thread() {
+        override fun run() {
+            try {
+                while (!isInterrupted) {
+                    sleep(1000)
+                    runOnUiThread(Runnable { currentDate.updateDate() })
+                }
+            } catch (e : InterruptedException) {
+                println("Exception in TimeThread!")
+            }
+        }
     }
 }
