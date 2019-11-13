@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.core.view.setPadding
 import androidx.core.view.size
+import com.example.planner.db.EventService
 import com.example.planner.dialogs.CreateTaskDialog
 import java.sql.Time
 
@@ -37,6 +38,7 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
         addedTasks = getAddedTasks()
 
         initializeDate()
+        showAddedTasks()
 
         addButton.setOnClickListener(this)
         deleteButton.setOnClickListener(this)
@@ -126,6 +128,24 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
 
         tasks.sort()
         return arrayListOf()
+    }
+
+    /** A method that show all added tasks for today.
+     *
+     *  This method will be useful when you start the activity
+     * */
+    private fun showAddedTasks() {
+        val connection = DatabaseWorker()
+        connection.setConnection(this)
+        val eventService = EventService()
+
+        val events = eventService.getAllEventsForToday(connection.getmDb(), currentDate.calendar)
+        for (event in events) {
+            val newTask = Task()
+            newTask.makeFromEvent(event)
+
+            addToTaskList(newTask)
+        }
     }
 
     inner class TimeThread : Thread() {

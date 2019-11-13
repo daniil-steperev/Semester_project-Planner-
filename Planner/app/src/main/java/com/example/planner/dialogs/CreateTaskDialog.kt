@@ -16,6 +16,7 @@ import com.example.planner.ToDoActivity
 import com.example.planner.db.Event
 import com.example.planner.db.EventService
 import com.example.planner.db.TriggerRule
+import java.util.*
 
 class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(), View.OnClickListener {
     var isReady = false;
@@ -126,7 +127,17 @@ class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(
         val connection = DatabaseWorker()
         connection.setConnection(activityContext)
 
-        val timeLong = 1.toLong() // FIXME: тут надо получить unix время из времени
+        val calendar = GregorianCalendar()
+        calendar.timeInMillis = System.currentTimeMillis()
+
+        val time = task.getTime()
+        calendar.set(Calendar.HOUR, time.hours)
+        calendar.set(Calendar.MINUTE, time.minutes)
+        calendar.set(Calendar.SECOND, time.seconds)
+
+        println(calendar.timeInMillis)
+
+        val timeLong = calendar.timeInMillis // FIXME: тут надо получить unix время из времени
         val eventName = task.getTask()
         val eventDescription = "" // FIXME: тут надо получать описание event
         val newEvent = Event(eventName, eventDescription, timeLong)

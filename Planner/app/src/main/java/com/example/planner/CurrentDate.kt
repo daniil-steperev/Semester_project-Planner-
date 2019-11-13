@@ -12,8 +12,10 @@ class CurrentDate(
     private var dayOfWeek: TextView,
     private var time: TextView
 ) {
+    lateinit var calendar : GregorianCalendar
+
     fun updateDate() {
-        val calendar = GregorianCalendar()
+        calendar = GregorianCalendar()
         calendar.timeInMillis = System.currentTimeMillis()
         //calendar.set(Calendar.HOUR_OF_DAY, 24)
 
