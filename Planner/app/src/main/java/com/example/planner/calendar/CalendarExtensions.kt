@@ -1,4 +1,4 @@
-package com.example.planner
+package com.example.planner.calendar
 
 import java.util.*
 

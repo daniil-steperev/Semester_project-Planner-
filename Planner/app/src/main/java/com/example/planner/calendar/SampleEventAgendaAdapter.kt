@@ -1,10 +1,11 @@
-package com.example.planner
+package com.example.planner.calendar
 
 import android.content.Context
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.example.planner.R
 import com.ognev.kotlin.agendacalendarview.CalendarManager
 import com.ognev.kotlin.agendacalendarview.models.CalendarEvent
 import com.ognev.kotlin.agendacalendarview.render.DefaultEventAdapter
@@ -25,9 +26,13 @@ class SampleEventAgendaAdapter(private var context: Context) : DefaultEventAdapt
         val today = CalendarManager.instance!!.today
 
         if (DateHelper.sameDate(day, today)) {
-            txtDayOfMonth.setTextColor(ContextCompat.getColor(context, R.color.main_blue))
+            txtDayOfMonth.setTextColor(ContextCompat.getColor(context,
+                R.color.main_blue
+            ))
         } else {
-            txtDayOfMonth.setTextColor(ContextCompat.getColor(context, R.color.text_light_color))
+            txtDayOfMonth.setTextColor(ContextCompat.getColor(context,
+                R.color.text_light_color
+            ))
         }
 
         txtDayOfMonth.text = format.format(day.time)
