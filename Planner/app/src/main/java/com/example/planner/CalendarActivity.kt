@@ -57,11 +57,21 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         var event = Event()
         event.setName("English")
         event.setDescription("Problem-solution essay")
-        event.setTime(1367701200000)
+        event.setTime(1573635222665)
 
         connection.addEvent(event)
 
         var list : List<Event> =  connection.readEventsForToday()
+
+        for (i in list) {
+            val day = Calendar.getInstance(Locale.ENGLISH)
+            day.timeInMillis = i.getTime()
+            eventList.add(MyCalendarEvent(day, day,
+                DayItem.buildDayItemFromCal(day), SampleEvent(0, name = i.getName(), description = i.getDescription())).setEventInstanceDay(day))
+        }
+
+        connection.closeConnection()
+        connection.getmDb().close()
 
         contentManager.loadItemsFromStart(eventList)
         agenda_calendar_view.agendaView.agendaListView.setOnItemClickListener({ parent: AdapterView<*>, view: View, position: Int, id: Long ->
