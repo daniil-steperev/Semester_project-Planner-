@@ -2,6 +2,8 @@ package com.example.planner.db
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import androidx.core.database.sqlite.transaction
+import java.lang.IndexOutOfBoundsException
 import java.util.*
 
 class EventService {
@@ -59,13 +61,9 @@ class EventService {
 
         var events = mutableListOf<Event>()
 
-        val queryEventId = "SELECT * FROM event_param WHERE time > $startTime AND time < $endTime"
+        val queryEventId = "SELECT * FROM event_param WHERE (time > $startTime) AND (time < $endTime)"
         val cursor = mDb.rawQuery(queryEventId, null)
-
-        if (cursor.isNull(1)) {
-            mDb.endTransaction()
-            return events
-        }
+        cursor.moveToFirst()
 
         while (!cursor.isAfterLast) {
             val event = Event()
@@ -78,14 +76,15 @@ class EventService {
             val queryEvent = "SELECT * FROM event WHERE id = $eventId"
 
             val eventCursor = mDb.rawQuery(queryEvent, null)
+            eventCursor.moveToFirst()
             event.setName(eventCursor.getString(eventCursor.getColumnIndex("name")))
 
             events.add(event)
             eventCursor.close()
             cursor.moveToNext()
         }
+
         cursor.close()
-        mDb.endTransaction()
 
         return events
     }
@@ -93,7 +92,6 @@ class EventService {
     fun deleteEvent(e: Event, mDb: SQLiteDatabase) {
         val query = "DELETE FROM Event WHERE name = \"${e.getName()}\"; "
         mDb.execSQL(query)
-        mDb.endTransaction()
     }
 
 
