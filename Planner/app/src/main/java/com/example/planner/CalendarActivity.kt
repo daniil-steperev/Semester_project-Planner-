@@ -18,6 +18,15 @@ import kotlinx.android.synthetic.main.activity_calendar.*
 
 import java.util.*
 import kotlin.collections.ArrayList
+import androidx.work.OneTimeWorkRequest
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import androidx.work.WorkManager
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+
+
+
 
 class CalendarActivity : AppCompatActivity(), CalendarController {
 
@@ -70,7 +79,7 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         var date2 : Date = Date(maxDate.timeInMillis)
         println("maxdate" + " " + minDate.timeInMillis + " " + date2.year + " " + date2.month + " " + date2.day )*/
 
-        val day = Calendar.getInstance()
+        /*val day = Calendar.getInstance()
 
         var initDay = minDate.timeInMillis
         var count : Int = 0
@@ -97,26 +106,14 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
                 }
             }
             initDay += 86400000
-        }
-        /*println("Events actual for 14 november")
-        var list : List<Event> =  connection.readEventsForToday(1573678800000)
-        for (i in list) {
-            println(i.getName() + " " + i.getTime() + " " + i.getDescription())
-        }
-
-        val day = Calendar.getInstance()
-
-
-        for (i in list) {
-            val day = Calendar.getInstance(Locale.ENGLISH)
-            day.timeInMillis = i.getTime()
-            eventList.add(MyCalendarEvent(day, day,
-                DayItem.buildDayItemFromCal(day), SampleEvent(0, name = i.getName(), description = i.getDescription())).setEventInstanceDay(day))
         }*/
 
         connection.closeConnection()
         connection.getmDb().close()
 
+        val mWorkManager = WorkManager.getInstance()
+        val myWorkRequest = OneTimeWorkRequest.Builder(EventTimer::class.java!!).build()
+        mWorkManager.enqueue(myWorkRequest)
 
         val maxLength = Calendar.getInstance().getMaximum(Calendar.DAY_OF_MONTH)
 
