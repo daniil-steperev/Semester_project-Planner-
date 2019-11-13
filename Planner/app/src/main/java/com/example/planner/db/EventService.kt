@@ -6,7 +6,9 @@ import android.database.sqlite.SQLiteDatabase
 import java.util.*
 
 class EventService {
-    fun addEvent(e : Event, mDb : SQLiteDatabase, dbHelper : DatabaseHelper) {
+    //private var listener : Listener = Listener()
+
+    fun addEvent(e : Event, mDb : SQLiteDatabase, dbHelper : DatabaseHelper, triggers : MutableList<Trigger>) {
         try {
             val query1 = "INSERT INTO event (name) VALUES(\"${e.getName()}\"); "
             mDb.beginTransaction()
@@ -23,6 +25,9 @@ class EventService {
 
             mDb.endTransaction()
 
+            val listener = Listener()
+            listener.addEvent(mDb, e, triggers)
+
         } catch (e : android.database.sqlite.SQLiteConstraintException){
             println("Such event already exists")
             mDb.endTransaction()
@@ -35,10 +40,26 @@ class EventService {
         mDb.execSQL(query)
     }
 
-    fun readEvent(/*list : MutableList<Trigger>,*/ mDb : SQLiteDatabase) : MutableList<Event> {
-        val cursor = mDb.rawQuery("SELECT * FROM event",null)
+
+    // FIXME: add handling list of triggers!
+    fun readEvent(list : MutableList<Trigger>, mDb : SQLiteDatabase) : MutableList<Event> {
         var events : MutableList<Event> = LinkedList<Event>()
-        cursor.moveToFirst()
+        for (i in list) {
+            val cursor1 = mDb.rawQuery("SELECT * FROM listener WHERE trigger_id = ${i.getID()}",null)
+            cursor1.moveToFirst()
+            while (!cursor1.isAfterLast) {
+                var event_id = cursor1.getLong(cursor1.getColumnIndex("event_id"))
+                val cursor2 = mDb.rawQuery("SELECT * FROM event WHERE id = $event_id", null)
+                cursor2.moveToFirst()
+                var event : Event = mapEvent(cursor2, mDb)
+                println("Event : " + event.getID() + " " + event.getDescription() + "  " + event.getTime() + " " + event.getName())
+                events.add(mapEvent(cursor2, mDb))
+                cursor1.moveToNext()
+                cursor2.close()
+            }
+            cursor1.close()
+        }
+        /*cursor.moveToFirst()
         while (!cursor.isAfterLast) {
             events.add(mapEvent(cursor, mDb))
             cursor.moveToNext()
@@ -47,7 +68,8 @@ class EventService {
         for (i in events) {
             var result : String = "${i.getID()}  ${i.getName()} + ${i.getDescription()} + ${i.getTime()}"
             println(result)
-        }
+        }*/
+
         return events
     }
 
@@ -65,8 +87,10 @@ class EventService {
 
         var cursorInEventParam : Cursor = mDb.rawQuery(query, null)
         cursorInEventParam.moveToFirst()
-        e.setDescription(cursorInEventParam.getString(1))
-        e.setTime(cursorInEventParam.getLong(2))
+
+        e.setDescription(cursorInEventParam.getString(cursorInEventParam.getColumnIndex("description")))
+        e.setTime(cursorInEventParam.getLong(cursorInEventParam.getColumnIndex("time")))
+
         cursorInEventParam.close()
         /*var result1 : String = "${e.getID()}  ${e.getName()} + ${e.getDescription()} + ${e.getTime()}"
         println(result1)*/

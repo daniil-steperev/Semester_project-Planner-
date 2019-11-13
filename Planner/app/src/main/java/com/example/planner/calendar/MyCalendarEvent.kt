@@ -1,4 +1,4 @@
-package com.example.planner
+package com.example.planner.calendar
 import com.ognev.kotlin.agendacalendarview.models.*
 import java.util.*
 
@@ -41,7 +41,8 @@ class MyCalendarEvent : BaseCalendarEvent {
         this.event = event
     }
 
-    override fun copy(): MyCalendarEvent = MyCalendarEvent()
+    override fun copy(): MyCalendarEvent =
+        MyCalendarEvent()
 
     override fun hasEvent() = event != null
 }

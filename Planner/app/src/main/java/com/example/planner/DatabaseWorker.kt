@@ -36,9 +36,9 @@ class DatabaseWorker {
         return mDb
     }
 
-    fun addEvent(e : Event) {
+    fun addEvent(e : Event, trigger : MutableList<Trigger>) {
         println("In DBConnection")
-        eventService.addEvent(e, mDb, mDBHelper)
+        eventService.addEvent(e, mDb, mDBHelper, trigger)
     }
 
     fun deleteEvent(e : Event) {
@@ -46,15 +46,16 @@ class DatabaseWorker {
         eventService.deleteEvent(e, mDb, mDBHelper)
     }
 
-    fun readEventsForToday() : List<Event> {
-        return eventService.readEvent(mDb)
+    fun readEventsForToday(date : Long) : List<Event> {
+        val triggers = triggerService.readTrigger(mDb, date)
+        return eventService.readEvent(triggers, mDb)
     }
 
     fun closeConnection() {
         mDBHelper.close()
     }
 
-    fun readTriggerForToday() : List<Trigger> {
+    fun readTriggerForToday() : MutableList<Trigger> {
         return triggerService.readTrigger(mDb, System.currentTimeMillis())
     }
 }
