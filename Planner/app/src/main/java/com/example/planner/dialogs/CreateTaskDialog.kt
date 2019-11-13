@@ -1,5 +1,6 @@
 package com.example.planner.dialogs
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,9 +9,12 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
+import com.example.planner.DatabaseWorker
 import com.example.planner.R
 import com.example.planner.Task
 import com.example.planner.ToDoActivity
+import com.example.planner.db.Event
+import com.example.planner.db.EventService
 import com.example.planner.db.TriggerRule
 
 class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(), View.OnClickListener {
@@ -32,6 +36,13 @@ class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(
     private lateinit var cBoxSunday : CheckBox
     private lateinit var cBoxEveryDay : CheckBox
     private lateinit var cBoxEveryWeek : CheckBox
+
+    private lateinit var activityContext : Context
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        activityContext = context
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -94,6 +105,7 @@ class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(
                 task.setTask(taskName)
                 task.setTime(time)
 
+                addToDataBase()
                 toDoActivity.addToTaskList(task)
 
                 dismiss() // close create task dialog fragment
@@ -107,5 +119,21 @@ class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(
         } else {
             task.addRule(rule)
         }
+    }
+
+    /** A method that adds Event to database. */
+    private fun addToDataBase() {
+        val connection = DatabaseWorker()
+        connection.setConnection(activityContext)
+
+        val timeLong = 1.toLong() // FIXME: тут надо получить unix время из времени
+        val eventName = task.getTask()
+        val eventDescription = "" // FIXME: тут надо получать описание event
+        val newEvent = Event(eventName, eventDescription, timeLong)
+
+        val activeTriggers = task.getRule()
+        val eventService = EventService()
+
+        eventService.addEvent(newEvent, connection.getmDb(), activeTriggers)
     }
 }

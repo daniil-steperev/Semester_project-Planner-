@@ -1,14 +1,17 @@
 package com.example.planner.db
 
 import android.database.Cursor
-import com.example.planner.DatabaseHelper
 import android.database.sqlite.SQLiteDatabase
 import java.util.*
 
 class EventService {
     //private var listener : Listener = Listener()
 
-    fun addEvent(e : Event, mDb : SQLiteDatabase, dbHelper : DatabaseHelper, triggers : MutableList<Trigger>) {
+    fun addEvent(
+        e: Event,
+        mDb: SQLiteDatabase,
+        triggers: MutableList<TriggerRule>
+    ) {
         try {
             val query1 = "INSERT INTO event (name) VALUES(\"${e.getName()}\"); "
             mDb.beginTransaction()
@@ -35,7 +38,7 @@ class EventService {
 
     }
 
-    fun deleteEvent(e : Event, mDb : SQLiteDatabase, dbHelper : DatabaseHelper) {
+    fun deleteEvent(e: Event, mDb: SQLiteDatabase) {
         val query : String = "DELETE FROM Event WHERE name = \"${e.getName()}\"; "
         mDb.execSQL(query)
     }

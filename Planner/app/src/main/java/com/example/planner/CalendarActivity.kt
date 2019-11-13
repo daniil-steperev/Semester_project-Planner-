@@ -60,11 +60,6 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         event.setDescription("Problem-solution essay")
         event.setTime(1573145514481)
 
-        var chosenTriggers : MutableList<Trigger> = LinkedList<Trigger>()
-        chosenTriggers.add(Trigger(4, TriggerRule.THURSDAY))
-        //trigger = "MONDAY"
-        connection.addEvent(event, chosenTriggers)
-
         /*var date1 : Date = Date(minDate.timeInMillis)
         println("mindate" + minDate.timeInMillis + " " + date1.year + " " + date1.month + " " + date1.day )
         var date2 : Date = Date(maxDate.timeInMillis)

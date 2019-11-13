@@ -36,14 +36,14 @@ class DatabaseWorker {
         return mDb
     }
 
-    fun addEvent(e : Event, trigger : MutableList<Trigger>) {
+    fun addEvent(e : Event, trigger : MutableList<TriggerRule>) {
         println("In DBConnection")
-        eventService.addEvent(e, mDb, mDBHelper, trigger)
+        eventService.addEvent(e, mDb, trigger)
     }
 
     fun deleteEvent(e : Event) {
         println("In DBConnection")
-        eventService.deleteEvent(e, mDb, mDBHelper)
+        eventService.deleteEvent(e, mDb)
     }
 
     fun readEventsForToday(date : Long) : List<Event> {
