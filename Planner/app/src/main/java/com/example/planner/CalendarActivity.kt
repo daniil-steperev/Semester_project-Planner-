@@ -61,11 +61,6 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         contentManager.locale = Locale.ENGLISH
         contentManager.setDateRange(minDate, maxDate)
 
-        val mWorkManager = WorkManager.getInstance()
-        val myWorkRequest = OneTimeWorkRequest.Builder(EventTimer::class.java!!)
-            .setInitialDelay(3, TimeUnit.MINUTES).build()
-        mWorkManager.enqueue(myWorkRequest)
-
         var connection = DatabaseWorker()
         connection.setConnection(this)
 
@@ -74,10 +69,15 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         event.setDescription("Problem-solution essay")
         event.setTime(1573145514481)
 
-        var chosenTriggers : MutableList<Trigger> = LinkedList<Trigger>()
+        /*var chosenTriggers : MutableList<Trigger> = LinkedList()
         chosenTriggers.add(Trigger(4, TriggerRule.THURSDAY))
-        //trigger = "MONDAY"
-        connection.addEvent(event, chosenTriggers)
+        connection.addEvent(event, chosenTriggers)*/
+
+        var event1 = Event()
+        event1.setName("walking")
+        event1.setDescription("in the forest")
+        event1.setTime(1573126512000)
+        connection.deleteEvent(event1)
 
         val day = Calendar.getInstance()
 

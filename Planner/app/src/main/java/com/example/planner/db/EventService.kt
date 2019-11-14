@@ -36,8 +36,60 @@ class EventService {
     }
 
     fun deleteEvent(e : Event, mDb : SQLiteDatabase, dbHelper : DatabaseHelper) {
-        val query : String = "DELETE FROM Event WHERE name = \"${e.getName()}\"; "
-        mDb.execSQL(query)
+        try {
+        mDb.beginTransaction()
+
+        val cursor1 = mDb.rawQuery("SELECT * FROM event WHERE name = \"${e.getName()}\"; ", null)
+        cursor1.moveToFirst()
+        val id : Long = cursor1.getLong(cursor1.getColumnIndex("id"))
+
+        mDb.delete("event_param", "event_id = \"$id\"", null)
+
+        val cursor2 = mDb.rawQuery("SELECT * FROM listener WHERE event_id = $id", null)
+        cursor2.moveToFirst()
+        while (!cursor2.isAfterLast) {
+            mDb.delete("listener", "id = \"${cursor2.getLong(cursor2.getColumnIndex("id"))}\"", null)
+            cursor2.moveToNext()
+        }
+
+        mDb.delete("event", "name = \"${e.getName()}\"", null)
+
+        cursor1.close()
+        cursor2.close()
+
+        mDb.setTransactionSuccessful()
+        mDb.endTransaction()
+        } catch (e : Exception) {
+            println("Such object already exists")
+        }
+
+        //debugging print
+        /*val cursorDebug2 = mDb.rawQuery("SELECT * FROM event_param", null)
+        cursorDebug2.moveToFirst()
+        while (!cursorDebug2.isAfterLast) {
+            println(cursorDebug2.getString(cursorDebug2.getColumnIndex("event_id"))
+                    + " " + cursorDebug2.getString(cursorDebug2.getColumnIndex("description")) + " "
+                    + cursorDebug2.getLong(cursorDebug2.getColumnIndex("time")))
+            cursorDebug2.moveToNext()
+        }
+        cursorDebug2.close()
+        val cursorDebug3 = mDb.rawQuery("SELECT * FROM listener", null)
+        cursorDebug3.moveToFirst()
+        while (!cursorDebug3.isAfterLast) {
+            println("DFGDFGDFG" + cursorDebug3.getLong(cursorDebug3.getColumnIndex("event_id")) +
+                    " " + cursorDebug3.getLong(cursorDebug3.getColumnIndex("trigger_id")) + " "
+                    + cursorDebug3.getLong(cursorDebug3.getColumnIndex("id")))
+            cursorDebug3.moveToNext()
+        }
+        cursorDebug3.close()
+
+        val cursorDebug1 = mDb.rawQuery("SELECT * FROM event", null)
+        cursorDebug1.moveToFirst()
+        while (!cursorDebug1.isAfterLast) {
+            println(cursorDebug1.getString(cursorDebug1.getColumnIndex("name")))
+            cursorDebug1.moveToNext()
+        }
+        cursorDebug1.close()*/
     }
 
 
