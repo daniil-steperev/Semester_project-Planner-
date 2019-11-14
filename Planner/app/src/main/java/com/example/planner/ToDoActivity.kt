@@ -15,11 +15,12 @@ import androidx.core.view.setPadding
 import androidx.core.view.size
 import com.example.planner.db.EventService
 import com.example.planner.dialogs.CreateTaskDialog
+import com.example.planner.dialogs.RemoveTaskDialog
 import java.sql.Time
 
 @Suppress("DEPRECATION")
 class ToDoActivity : AppCompatActivity(), View.OnClickListener {
-    private lateinit var llMain : LinearLayout
+    lateinit var llMain : LinearLayout
     private lateinit var addButton : Button
     private lateinit var deleteButton : Button
 
@@ -65,11 +66,8 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             R.id.delete_button -> {
-                if (llMain.size > 0) {
-                    llMain.removeView(llMain.get(llMain.size - 1))
-                    addedTasks.remove(addedTasks.get(addedTasks.lastIndex))
-                }
-                Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show()
+                val removeTaskDialog = RemoveTaskDialog(addedTasks, this)
+                removeTaskDialog.show(supportFragmentManager, "removeTaskDialog")
             }
         }
     }
@@ -89,13 +87,16 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             for (task in addedTasks) { // add task in right order
-                val newLine = getNewTaskLine(task.getTime(), task.getTask())
+                val newLine = getNewTaskLine(task)
                 llMain.addView(newLine, lParams)
             }
         }
     }
 
-    private fun getNewTaskLine(timeText : Time, taskText : String) : LinearLayout {
+    fun getNewTaskLine(task : Task) : LinearLayout {
+        val timeText = task.getTime()
+        val taskText = task.getTask()
+
         val newLine = LinearLayout(this)
         newLine.orientation = LinearLayout.HORIZONTAL
 
@@ -134,7 +135,7 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
      *
      *  This method will be useful when you start the activity
      * */
-    private fun showAddedTasks() {
+    fun showAddedTasks() {
         val connection = DatabaseWorker()
         connection.setConnection(this)
         val eventService = EventService()

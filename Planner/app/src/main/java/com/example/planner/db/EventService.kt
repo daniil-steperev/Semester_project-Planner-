@@ -13,34 +13,32 @@ class EventService {
         e: Event,
         mDb: SQLiteDatabase,
         triggers: MutableList<TriggerRule>
-    ) {
-        try {
-            val query1 = "INSERT INTO event (name) VALUES(\"${e.getName()}\"); "
-            mDb.beginTransaction()
-            mDb.execSQL(query1)
-            mDb.setTransactionSuccessful()
+    ) = try {
+        val query1 = "INSERT INTO event (name) VALUES(\"${e.getName()}\"); "
+        mDb.beginTransaction()
+        mDb.execSQL(query1)
+        mDb.setTransactionSuccessful()
 
-            val cursor = mDb.rawQuery("SELECT * FROM event WHERE name = \"${e.getName()}\"", null)
-            cursor.moveToFirst()
-            var id : Int = cursor.getInt(0)
+        val cursor = mDb.rawQuery("SELECT * FROM event WHERE name = \"${e.getName()}\"", null)
+        cursor.moveToFirst()
+        var id : Int = cursor.getInt(0)
 
-            val query2 =
-                "INSERT INTO event_param (event_id, description, time) VALUES($id, \"${e.getDescription()}\", ${e.getTime()});"
-            mDb.execSQL(query2)
+        val query2 =
+            "INSERT INTO event_param (event_id, description, time) VALUES($id, \"${e.getDescription()}\", ${e.getTime()});"
+        mDb.execSQL(query2)
 
-            mDb.endTransaction()
+        mDb.endTransaction()
 
-            val listener = Listener()
-            listener.addEvent(mDb, e, triggers)
+        val listener = Listener()
+        listener.addEvent(mDb, e, triggers)
 
-        } catch (e : android.database.sqlite.SQLiteConstraintException){
-            println("Such event already exists")
-            mDb.endTransaction()
-        }
-
+    } catch (e : android.database.sqlite.SQLiteConstraintException){
+        println("Such event already exists")
+        mDb.endTransaction()
     }
 
     fun getAllEventsForToday(mDb : SQLiteDatabase, originalCalendar : Calendar) : MutableList<Event> {
+        printAllEvents(mDb)
         val calendar = GregorianCalendar()
         calendar.timeInMillis = originalCalendar.timeInMillis
 
@@ -57,14 +55,13 @@ class EventService {
         calendar.set(Calendar.MILLISECOND, 59)
 
         val endTime = calendar.timeInMillis
-        println("START TIME = $startTime    END TIME = $endTime")
 
         var events = mutableListOf<Event>()
 
         val queryEventId = "SELECT * FROM event_param WHERE (time > $startTime) AND (time < $endTime)"
         val cursor = mDb.rawQuery(queryEventId, null)
-        cursor.moveToFirst()
 
+        cursor.moveToFirst()
         while (!cursor.isAfterLast) {
             val event = Event()
 
@@ -78,8 +75,8 @@ class EventService {
             val eventCursor = mDb.rawQuery(queryEvent, null)
             eventCursor.moveToFirst()
             event.setName(eventCursor.getString(eventCursor.getColumnIndex("name")))
+            events.add(event) // FIXME
 
-            events.add(event)
             eventCursor.close()
             cursor.moveToNext()
         }
@@ -90,8 +87,34 @@ class EventService {
     }
 
     fun deleteEvent(e: Event, mDb: SQLiteDatabase) {
-        val query = "DELETE FROM Event WHERE name = \"${e.getName()}\"; "
-        mDb.execSQL(query)
+        val queryDeleteEvent = "DELETE FROM Event WHERE name = \"${e.getName()}\"; "
+        mDb.execSQL(queryDeleteEvent)
+
+        printAllEvents(mDb)
+    }
+
+    private fun printAllEvents(mDb : SQLiteDatabase) {
+        val queryEvent = "SELECT * FROM event"
+        val cursorEvent = mDb.rawQuery(queryEvent, null)
+        cursorEvent.moveToFirst()
+        println("ACTIVE EVENTS")
+        while (!cursorEvent.isAfterLast) {
+            val id = cursorEvent.getLong(cursorEvent.getColumnIndex("id"))
+            val name = cursorEvent.getString(cursorEvent.getColumnIndex("name"))
+            println("$id $name")
+            cursorEvent.moveToNext()
+        }
+
+        val query = "SELECT * FROM event_param"
+        val cursor = mDb.rawQuery(query, null)
+        cursor.moveToFirst()
+        println("ACTIVE EVENTS_PARAM !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+        while (!cursor.isAfterLast) {
+            val id = cursor.getLong(cursor.getColumnIndex("event_id"))
+            //val name = cursor.getString(cursor.getColumnIndex("name"))
+            println("$id")
+            cursor.moveToNext()
+        }
     }
 
 

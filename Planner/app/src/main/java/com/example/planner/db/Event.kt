@@ -2,7 +2,7 @@ package com.example.planner.db
 
 class Event() {
     private var id : Long = 0
-    private lateinit var name: String
+    private var name = ""
     private lateinit var description : String
     private var time : Long = 0
     private var doneSuccessful : Boolean = false
