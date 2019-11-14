@@ -2,8 +2,6 @@ package com.example.planner.db
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import androidx.core.database.sqlite.transaction
-import java.lang.IndexOutOfBoundsException
 import java.util.*
 
 class EventService {
@@ -75,7 +73,9 @@ class EventService {
             val eventCursor = mDb.rawQuery(queryEvent, null)
             eventCursor.moveToFirst()
             event.setName(eventCursor.getString(eventCursor.getColumnIndex("name")))
-            events.add(event) // FIXME
+            events.add(event)
+
+            println("EVENTS SIZE : ${events.size}")
 
             eventCursor.close()
             cursor.moveToNext()
@@ -87,10 +87,32 @@ class EventService {
     }
 
     fun deleteEvent(e: Event, mDb: SQLiteDatabase) {
-        val queryDeleteEvent = "DELETE FROM Event WHERE name = \"${e.getName()}\"; "
-        mDb.execSQL(queryDeleteEvent)
+        try {
+            mDb.beginTransaction()
 
-        printAllEvents(mDb)
+            val cursor1 = mDb.rawQuery("SELECT * FROM event WHERE name = \"${e.getName()}\"; ", null)
+            cursor1.moveToFirst()
+            val id : Long = cursor1.getLong(cursor1.getColumnIndex("id"))
+
+            mDb.delete("event_param", "event_id = \"$id\"", null)
+
+            val cursor2 = mDb.rawQuery("SELECT * FROM listener WHERE event_id = $id", null)
+            cursor2.moveToFirst()
+            while (!cursor2.isAfterLast) {
+                mDb.delete("listener", "id = \"${cursor2.getLong(cursor2.getColumnIndex("id"))}\"", null)
+                cursor2.moveToNext()
+            }
+
+            mDb.delete("event", "name = \"${e.getName()}\"", null)
+
+            cursor1.close()
+            cursor2.close()
+
+            mDb.setTransactionSuccessful()
+            mDb.endTransaction()
+        } catch (e : Exception) {
+            println("Such object already exists")
+        }
     }
 
     private fun printAllEvents(mDb : SQLiteDatabase) {
@@ -115,6 +137,8 @@ class EventService {
             println("$id")
             cursor.moveToNext()
         }
+
+        cursor.close()
     }
 
 

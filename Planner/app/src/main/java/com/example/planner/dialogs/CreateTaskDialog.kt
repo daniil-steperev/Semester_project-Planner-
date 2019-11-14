@@ -135,8 +135,6 @@ class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(
         calendar.set(Calendar.MINUTE, time.minutes)
         calendar.set(Calendar.SECOND, time.seconds)
 
-        println(calendar.timeInMillis)
-
         val timeLong = calendar.timeInMillis // FIXME: тут надо получить unix время из времени
         val eventName = task.getTask()
         val eventDescription = "" // FIXME: тут надо получать описание event
