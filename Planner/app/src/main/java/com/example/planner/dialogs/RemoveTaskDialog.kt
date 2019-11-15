@@ -38,7 +38,7 @@ class RemoveTaskDialog(private val tasks : ArrayList<Task>, private val activity
 
         removeFromDataBase()
 
-        activity.showAddedTasks()
+        activity.updateTaskList()
         dismiss()
     }
 

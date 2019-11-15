@@ -19,7 +19,7 @@ class EventService {
 
         val cursor = mDb.rawQuery("SELECT * FROM event WHERE name = \"${e.getName()}\"", null)
         cursor.moveToFirst()
-        var id : Int = cursor.getInt(0)
+        var id  = cursor.getInt(0)
 
         val query2 =
             "INSERT INTO event_param (event_id, description, time) VALUES($id, \"${e.getDescription()}\", ${e.getTime()});"
@@ -74,8 +74,6 @@ class EventService {
             eventCursor.moveToFirst()
             event.setName(eventCursor.getString(eventCursor.getColumnIndex("name")))
             events.add(event)
-
-            println("EVENTS SIZE : ${events.size}")
 
             eventCursor.close()
             cursor.moveToNext()

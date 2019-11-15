@@ -36,10 +36,10 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
         llMain = findViewById(R.id.todo_window)
         addButton = findViewById(R.id.add_button)
         deleteButton = findViewById(R.id.delete_button)
-        addedTasks = getAddedTasks()
+        addedTasks = ArrayList()
 
         initializeDate()
-        showAddedTasks()
+        updateTaskList()
 
         addButton.setOnClickListener(this)
         deleteButton.setOnClickListener(this)
@@ -72,29 +72,26 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    fun addToTaskList(newTask : Task) {
+    private fun addToTaskList(newTask : Task) {
         val lParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
         addedTasks.add(newTask)
+        addedTasks.sort() // sort tasks
 
-        if (addedTasks.size != 0) {
-            addedTasks.sort() // sort tasks
-            if (llMain.size > 0) { // remove other tasks if they present
-                llMain.removeAllViews()
-            }
+        llMain.removeAllViews()
 
-            for (task in addedTasks) { // add task in right order
-                val newLine = getNewTaskLine(task)
-                llMain.addView(newLine, lParams)
-            }
+
+        for (task in addedTasks) { // add task in right order
+            val newLine = getNewTaskLine(task)
+            llMain.addView(newLine, lParams)
         }
     }
 
-    fun getNewTaskLine(task : Task) : LinearLayout {
-        val timeText = task.getTime()
+    private fun getNewTaskLine(task : Task) : LinearLayout {
+        val timeValue = task.getTime().toString()
         val taskText = task.getTask()
 
         val newLine = LinearLayout(this)
@@ -102,7 +99,9 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
 
         val time = TextView(this)
         time.setPadding(5)
-        time.text = timeText.toString()
+
+        val timeWithoutSeconds = timeValue.subSequence(0, timeValue.lastIndexOf(':'))
+        time.text = timeWithoutSeconds
         time.textSize = 20.toFloat()
 
         val task = TextView(this)
@@ -123,29 +122,26 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
         return newLine
     }
 
-    private fun getAddedTasks() : ArrayList<Task> {
-        val tasks = emptyArray<Task>()
+    fun updateTaskList() {
         // Получить из базы данных список дел на день, выполнить сортировку
+        addedTasks = ArrayList()
 
-        tasks.sort()
-        return arrayListOf()
-    }
-
-    /** A method that show all added tasks for today.
-     *
-     *  This method will be useful when you start the activity
-     * */
-    fun showAddedTasks() {
         val connection = DatabaseWorker()
         connection.setConnection(this)
         val eventService = EventService()
 
+        println("GETTING ALL EVENTS FOR TODAY")
         val events = eventService.getAllEventsForToday(connection.getmDb(), currentDate.calendar)
         for (event in events) {
+            println("ADDING NEW EVENT")
             val newTask = Task()
             newTask.makeFromEvent(event)
 
             addToTaskList(newTask)
+        }
+
+        if (events.size == 0) {
+            llMain.removeAllViews()
         }
     }
 

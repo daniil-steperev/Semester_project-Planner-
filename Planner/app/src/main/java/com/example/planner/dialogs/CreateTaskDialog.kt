@@ -1,6 +1,9 @@
 package com.example.planner.dialogs
 
+import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.TimePicker
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import com.example.planner.DatabaseWorker
 import com.example.planner.R
@@ -17,6 +22,7 @@ import com.example.planner.db.Event
 import com.example.planner.db.EventService
 import com.example.planner.db.TriggerRule
 import java.util.*
+import kotlin.math.min
 
 class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(), View.OnClickListener {
     var isReady = false;
@@ -26,7 +32,7 @@ class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(
     private lateinit var addTaskButton : Button
 
     private lateinit var taskEditor : EditText
-    private lateinit var timeEditor : EditText
+    private lateinit var timePicker : TimePicker
 
     private lateinit var cBoxMonday : CheckBox
     private lateinit var cBoxTuesday : CheckBox
@@ -57,7 +63,8 @@ class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(
         addTaskButton = view.findViewById(R.id.create_task_button)
 
         taskEditor = view.findViewById(R.id.task_editor)
-        timeEditor = view.findViewById(R.id.time_editor)
+        timePicker = view.findViewById(R.id.time_picker)
+        timePicker.setIs24HourView(true)
 
         cBoxMonday = view.findViewById(R.id.monday_repeat)
         cBoxTuesday = view.findViewById(R.id.tuesday_repeat)
@@ -87,6 +94,7 @@ class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(
         cBoxEveryDay.setOnClickListener(this)
     }
 
+
     override fun onClick(v: View?) {
         when (v) {
             cBoxMonday -> addOrRemoveRule(TriggerRule.MONDAY)
@@ -100,14 +108,15 @@ class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(
             cBoxEveryWeek -> addOrRemoveRule(TriggerRule.WEEKLY)
 
             addTaskButton -> {
-                val time = timeEditor.text.toString()
                 val taskName = taskEditor.text.toString()
 
                 task.setTask(taskName)
-                task.setTime(time)
 
-                addToDataBase()
-                toDoActivity.addToTaskList(task)
+                val hour = timePicker.currentHour
+                val minute = timePicker.currentMinute
+
+                addToDataBase(hour, minute)
+                toDoActivity.updateTaskList()
 
                 dismiss() // close create task dialog fragment
             }
@@ -123,17 +132,16 @@ class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(
     }
 
     /** A method that adds Event to database. */
-    private fun addToDataBase() {
+    private fun addToDataBase(hour : Int, minute : Int) {
         val connection = DatabaseWorker()
         connection.setConnection(activityContext)
 
         val calendar = GregorianCalendar()
         calendar.timeInMillis = System.currentTimeMillis()
 
-        val time = task.getTime()
-        calendar.set(Calendar.HOUR, time.hours)
-        calendar.set(Calendar.MINUTE, time.minutes)
-        calendar.set(Calendar.SECOND, time.seconds)
+        calendar.set(Calendar.HOUR_OF_DAY, hour)
+        calendar.set(Calendar.MINUTE, minute)
+
 
         val timeLong = calendar.timeInMillis // FIXME: тут надо получить unix время из времени
         val eventName = task.getTask()
