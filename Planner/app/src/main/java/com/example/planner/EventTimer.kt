@@ -41,12 +41,13 @@ class EventTimer(appContext: Context, workerParams: WorkerParameters)
         }
 
         var event = Event()
-        event.setName("Alloha!")
+        var time = System.currentTimeMillis()
+        event.setName("Alloha! + $time ")
         event.setDescription("Dance!!!")
-        event.setTime(1573673655014)
+        event.setTime(System.currentTimeMillis())
 
         var chosenTriggers: MutableList<Trigger> = LinkedList<Trigger>()
-        chosenTriggers.add(Trigger(4, TriggerRule.THURSDAY))
+        chosenTriggers.add(Trigger(3, TriggerRule.WEDNESDAY))
         connection.addEvent(event, chosenTriggers)
         connection.closeConnection()
         connection.getmDb().close()

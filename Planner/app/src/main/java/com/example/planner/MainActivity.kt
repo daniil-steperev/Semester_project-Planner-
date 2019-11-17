@@ -31,15 +31,15 @@ class MainActivity : AppCompatActivity() {
         pageAdapter = SlidePagerAdapter(supportFragmentManager, list, this)
 
         pager.adapter = pageAdapter
-        /*val mWorkManager = WorkManager.getInstance()
-        val myWorkRequest = PeriodicWorkRequestBuilder<EventTimer>(
-            15, TimeUnit.MINUTES, 20, TimeUnit.MINUTES
-        ).build()
-        mWorkManager.enqueueUniquePeriodicWork("Test adding", ExistingPeriodicWorkPolicy.KEEP, myWorkRequest)*/
         val mWorkManager = WorkManager.getInstance()
+        val myWorkRequest = PeriodicWorkRequestBuilder<EventTimer>(
+            1, TimeUnit.HOURS, 50, TimeUnit.MINUTES
+        ).build()
+        mWorkManager.enqueueUniquePeriodicWork("Test adding", ExistingPeriodicWorkPolicy.KEEP, myWorkRequest)
+        /*val mWorkManager = WorkManager.getInstance()
         val myWorkRequest = OneTimeWorkRequestBuilder<EventTimer>()
             .setInitialDelay(2, TimeUnit.MINUTES)
             .build()
-        mWorkManager.enqueueUniqueWork("Test adding", ExistingWorkPolicy.KEEP, myWorkRequest)
+        mWorkManager.enqueueUniqueWork("Test adding", ExistingWorkPolicy.KEEP, myWorkRequest)*/
     }
 }
