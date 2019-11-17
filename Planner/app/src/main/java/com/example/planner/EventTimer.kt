@@ -2,6 +2,7 @@ package com.example.planner
 
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.database.sqlite.SQLiteDatabaseLockedException
 import android.provider.SyncStateContract
 import android.util.Log
 import androidx.work.Operation.State.SUCCESS
@@ -28,7 +29,16 @@ class EventTimer(appContext: Context, workerParams: WorkerParameters)
         var date : Date = Date(System.currentTimeMillis())
         println("doWork: start")
         var connection = DatabaseWorker()
-        connection.setConnection(context)
+        //if (connection)
+        var dbLocked : Boolean = true
+        while (dbLocked) {
+            try {
+                connection.setConnection(context)
+                dbLocked = false
+            } catch (e: SQLiteDatabaseLockedException) {
+                Thread.sleep(10)
+            }
+        }
 
         var event = Event()
         event.setName("Alloha!")

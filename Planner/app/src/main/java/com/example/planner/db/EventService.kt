@@ -61,10 +61,11 @@ class EventService {
         mDb.endTransaction()
         } catch (e : Exception) {
             println("Such object already exists")
+            mDb.endTransaction()
         }
 
         //debugging print
-        /*val cursorDebug2 = mDb.rawQuery("SELECT * FROM event_param", null)
+        val cursorDebug2 = mDb.rawQuery("SELECT * FROM event_param", null)
         cursorDebug2.moveToFirst()
         while (!cursorDebug2.isAfterLast) {
             println(cursorDebug2.getString(cursorDebug2.getColumnIndex("event_id"))
@@ -89,7 +90,7 @@ class EventService {
             println(cursorDebug1.getString(cursorDebug1.getColumnIndex("name")))
             cursorDebug1.moveToNext()
         }
-        cursorDebug1.close()*/
+        cursorDebug1.close()
     }
 
 

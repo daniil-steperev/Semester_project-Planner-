@@ -1,5 +1,6 @@
 package com.example.planner
 
+import android.database.sqlite.SQLiteDatabaseLockedException
 import android.os.AsyncTask
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -61,17 +62,25 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         contentManager.locale = Locale.ENGLISH
         contentManager.setDateRange(minDate, maxDate)
 
+        var dbLocked  = true
         var connection = DatabaseWorker()
-        connection.setConnection(this)
+        while (dbLocked) {
+            try {
+                connection.setConnection(this)
+                dbLocked = false
+            } catch (e : SQLiteDatabaseLockedException) {
+                Thread.sleep(10)
+            }
+        }
 
         var event = Event()
         event.setName("English")
         event.setDescription("Problem-solution essay")
         event.setTime(1573145514481)
 
-        /*var chosenTriggers : MutableList<Trigger> = LinkedList()
+        var chosenTriggers : MutableList<Trigger> = LinkedList()
         chosenTriggers.add(Trigger(4, TriggerRule.THURSDAY))
-        connection.addEvent(event, chosenTriggers)*/
+        connection.addEvent(event, chosenTriggers)
 
         var event1 = Event()
         event1.setName("walking")
@@ -111,20 +120,6 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         connection.closeConnection()
         connection.getmDb().close()
 
-
-        val maxLength = Calendar.getInstance().getMaximum(Calendar.DAY_OF_MONTH)
-
-        for (i in 1..maxLength) {
-            val day = Calendar.getInstance(Locale.ENGLISH)
-            day.timeInMillis = System.currentTimeMillis()
-            day.set(Calendar.DAY_OF_MONTH, i)
-
-            eventList.add(
-                MyCalendarEvent(
-                    day, day,
-                    DayItem.buildDayItemFromCal(day), null
-                ).setEventInstanceDay(day))
-        }
         contentManager.loadItemsFromStart(eventList)
     }
 
