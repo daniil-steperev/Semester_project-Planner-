@@ -1,8 +1,10 @@
 package com.example.planner
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -10,10 +12,12 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.get
 import androidx.core.view.setPadding
 import androidx.core.view.size
 import com.example.planner.dialogs.CreateTaskDialog
+import com.example.planner.gestures.DetectSwipeGesturesListener
 import java.sql.Time
 
 @Suppress("DEPRECATION")
@@ -26,10 +30,14 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var currentDate: CurrentDate
     private lateinit var timeThread : TimeThread
+    private lateinit var gestureDetector : GestureDetectorCompat
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.todo)
+
+        val gestureListener = DetectSwipeGesturesListener(this, StatisticsActivity(), MainActivity())
+        gestureDetector = GestureDetectorCompat(this, gestureListener)
 
         llMain = findViewById(R.id.todo_window)
         addButton = findViewById(R.id.add_button)
@@ -40,6 +48,12 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
 
         addButton.setOnClickListener(this)
         deleteButton.setOnClickListener(this)
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        gestureDetector.onTouchEvent(event)
+        println("TRYING TO SWIPE!!")
+        return true
     }
 
     private fun initializeDate() {

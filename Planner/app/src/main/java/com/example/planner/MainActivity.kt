@@ -1,17 +1,18 @@
 package com.example.planner
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MotionEvent
+import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.PagerAdapter
-import androidx.viewpager.widget.ViewPager
 import com.example.planner.fragments.MenuFragment
 import com.example.planner.fragments.StatisticsFragment
 import com.example.planner.fragments.ToDoFragment
+import com.example.planner.gestures.DetectSwipeGesturesListener
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var pager : ViewPager
-    private lateinit var pageAdapter : PagerAdapter
+    private lateinit var gestureDetector : GestureDetectorCompat
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,9 +26,17 @@ class MainActivity : AppCompatActivity() {
         list.add(pageFragment2)
         list.add(pageFragment3)
 
-        pager = findViewById(R.id.pager)
-        pageAdapter = SlidePagerAdapter(supportFragmentManager, list, this)
+        val gestureListener = DetectSwipeGesturesListener(this, ToDoActivity(), StatisticsActivity())
+        gestureDetector = GestureDetectorCompat(this, gestureListener)
 
-        pager.adapter = pageAdapter
+            //pager = findViewById(R.id.pager)
+        //pageAdapter = SlidePagerAdapter(supportFragmentManager, list, this)
+
+        //pager.adapter = pageAdapter
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        gestureDetector.onTouchEvent(event)
+        return true
     }
 }
