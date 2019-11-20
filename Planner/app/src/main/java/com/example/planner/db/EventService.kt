@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase
 import java.util.*
 
 class EventService {
-    //private var listener : Listener = Listener()
 
     fun addEvent(e : Event, mDb : SQLiteDatabase, dbHelper : DatabaseHelper, triggers : MutableList<Trigger>) {
         try {
