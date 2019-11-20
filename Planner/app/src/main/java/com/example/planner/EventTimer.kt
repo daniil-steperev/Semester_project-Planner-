@@ -8,10 +8,7 @@ import android.util.Log
 import androidx.work.Operation.State.SUCCESS
 import javax.xml.datatype.DatatypeConstants.SECONDS
 import androidx.annotation.NonNull
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
-import androidx.work.Worker
-import androidx.work.WorkerParameters
+import androidx.work.*
 import com.example.planner.db.Event
 import com.example.planner.db.Trigger
 import com.example.planner.db.TriggerRule
@@ -29,7 +26,7 @@ class EventTimer(appContext: Context, workerParams: WorkerParameters)
         var date : Date = Date(System.currentTimeMillis())
         println("doWork: start")
         var connection = DatabaseWorker()
-        //if (connection)
+        //if connection is locked, timer waits, until it will no be free
         var dbLocked : Boolean = true
         while (dbLocked) {
             try {
@@ -51,6 +48,7 @@ class EventTimer(appContext: Context, workerParams: WorkerParameters)
         connection.addEvent(event, chosenTriggers)
         connection.closeConnection()
         connection.getmDb().close()
+
         println("doWork: end")
 
         return Result.success()

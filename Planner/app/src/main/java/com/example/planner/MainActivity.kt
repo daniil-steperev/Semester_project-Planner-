@@ -9,6 +9,7 @@ import androidx.work.*
 import com.example.planner.fragments.MenuFragment
 import com.example.planner.fragments.StatisticsFragment
 import com.example.planner.fragments.ToDoFragment
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
@@ -31,15 +32,28 @@ class MainActivity : AppCompatActivity() {
         pageAdapter = SlidePagerAdapter(supportFragmentManager, list, this)
 
         pager.adapter = pageAdapter
-        val mWorkManager = WorkManager.getInstance()
-        val myWorkRequest = PeriodicWorkRequestBuilder<EventTimer>(
-            1, TimeUnit.HOURS, 50, TimeUnit.MINUTES
-        ).build()
-        mWorkManager.enqueueUniquePeriodicWork("Test adding", ExistingPeriodicWorkPolicy.KEEP, myWorkRequest)
-        /*val mWorkManager = WorkManager.getInstance()
-        val myWorkRequest = OneTimeWorkRequestBuilder<EventTimer>()
-            .setInitialDelay(2, TimeUnit.MINUTES)
+        addToJournalPassedEvents()
+    }
+
+    private fun addToJournalPassedEvents() {
+        val delay = computateDelay()
+        val dailyWorkRequest = OneTimeWorkRequestBuilder<EventTimer>()
+            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
             .build()
-        mWorkManager.enqueueUniqueWork("Test adding", ExistingWorkPolicy.KEEP, myWorkRequest)*/
+        WorkManager.getInstance(applicationContext)
+            .enqueueUniqueWork("Adding events to journal", ExistingWorkPolicy.KEEP, dailyWorkRequest)
+    }
+
+    private fun computateDelay() : Long {
+        val currentDate = Calendar.getInstance()
+        val dueDate = Calendar.getInstance()
+        // Set Execution around 05:00:00 AM
+        dueDate.set(Calendar.HOUR_OF_DAY, 5)
+        dueDate.set(Calendar.MINUTE, 0)
+        dueDate.set(Calendar.SECOND, 0)
+        if (dueDate.before(currentDate)) {
+            dueDate.add(Calendar.HOUR_OF_DAY, 24)
+        }
+        return dueDate.timeInMillis - currentDate.timeInMillis
     }
 }
