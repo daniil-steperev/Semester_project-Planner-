@@ -14,6 +14,7 @@ class DatabaseWorker {
     private lateinit var mDb: SQLiteDatabase
     private var eventService : EventService = EventService()
     private var triggerService : TriggerService = TriggerService()
+    private var journalEntryService : JournalEntryService = JournalEntryService()
 
     fun setConnection(context : Context) {
         mDBHelper = DatabaseHelper(context)
@@ -57,5 +58,9 @@ class DatabaseWorker {
 
     fun readTriggerForToday() : MutableList<Trigger> {
         return triggerService.readTrigger(mDb, System.currentTimeMillis())
+    }
+
+    fun addEventsToJournal() {
+        journalEntryService.addPassedEvents(mDb)
     }
 }

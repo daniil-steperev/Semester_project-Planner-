@@ -129,6 +129,27 @@ class EventService {
 
     }
 
+    fun returnAllEventsInGivenPeriodOfTime(start : Long, end : Long, mDb : SQLiteDatabase) : MutableList<Event> {
+        val cursor = mDb.rawQuery("SELECT * From event_param WHERE (time > $start AND time < $end);",null)
+        var events : MutableList<Event> = LinkedList<Event>()
+
+        while (!cursor.isAfterLast) {
+            var event_id = cursor.getLong(cursor.getColumnIndex("event_id"))
+
+            val cursor2 = mDb.rawQuery("SELECT * FROM event WHERE id = $event_id", null)
+            cursor2.moveToFirst()
+            var event : Event = mapEvent(cursor2, mDb)
+
+            println("Event : " + event.getID() + " " + event.getDescription() + "  " + event.getTime() + " " + event.getName())
+
+            events.add(mapEvent(cursor2, mDb))
+            cursor.moveToNext()
+            cursor2.close()
+        }
+        cursor.close()
+        return events
+    }
+
     private fun mapEvent(cursor : Cursor, mDb: SQLiteDatabase) : Event {
         var e : Event = Event()
         e.setName(cursor.getString(cursor.getColumnIndex("name")))
