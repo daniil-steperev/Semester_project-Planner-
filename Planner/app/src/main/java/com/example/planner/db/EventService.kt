@@ -26,7 +26,7 @@ class EventService {
 
             val listener = Listener()
             listener.addEvent(mDb, e, triggers)
-
+            cursor.close()
         } catch (e : android.database.sqlite.SQLiteConstraintException){
             println("Such event already exists")
             mDb.endTransaction()

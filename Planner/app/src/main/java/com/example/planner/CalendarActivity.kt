@@ -74,6 +74,8 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
             }
         }
 
+        println("Connected to the db")
+
         var event = Event()
         event.setName("English")
         event.setDescription("Problem-solution essay")
@@ -88,12 +90,13 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         event1.setDescription("in the forest")
         event1.setTime(1573126512000)
         connection.deleteEvent(event1)
-        //count+
-        val day = Calendar.getInstance(Locale.ENGLISH)
+
+        println("removed added events")
 
         var currentTime = System.currentTimeMillis()
         val passedEvents = connection.getEntriesForGivenPeriodOfTime(minDate.timeInMillis, System.currentTimeMillis())
 
+        println("In cycle in journal")
         for (i in passedEvents) {
             val day = Calendar.getInstance(Locale.ENGLISH)
             day.timeInMillis = i.getTime()
@@ -111,6 +114,7 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
             )
         }
 
+        println("In cycle in future")
         while (currentTime < maxDate.timeInMillis) {
             var list : List<Event> =  connection.readEventsForToday(currentTime)
             val day = Calendar.getInstance()

@@ -17,7 +17,8 @@ class JournalEntryService() {
     fun addPassedEvents(mDb : SQLiteDatabase, eventService : EventService, triggerService: TriggerService) {
         var currentTime = System.currentTimeMillis()
         //var eventsToAdd  = eventService.returnAllEventsInGivenPeriodOfTime(lastEntryDate, currentTime, mDb)
-
+        println("HOHO")
+        println("HOHO " + lastEntryDate + " " + currentTime)
         while (lastEntryDate < currentTime) {
             var triggers : MutableList<Trigger> = triggerService.readTrigger(mDb, lastEntryDate)
             var list : List<Event> =  eventService.readEvent(triggers, mDb)
@@ -52,14 +53,23 @@ class JournalEntryService() {
     }
 
     fun getEntriesForGivenPeriodOfTime(start : Long, end : Long, mDb : SQLiteDatabase) : MutableList<JournalEntry> {
-        val cursor = mDb.rawQuery("SELECT * FROM event_journal WHERE (time > $start AND time < $end);",null)
-        cursor.moveToFirst()
         var entries : MutableList<JournalEntry> = LinkedList()
-        while (!cursor.isAfterLast) {
-            entries.add(mapEntry(cursor, mDb))
-            cursor.moveToNext()
-        }
-        cursor.close()
+        //try {
+            val cursor = mDb.rawQuery(
+                "SELECT * FROM event_journal WHERE (time > $start AND time < $end);",
+                null)
+            cursor.moveToFirst()
+        var count : Long = 0
+            while (!cursor.isAfterLast) {
+                entries.add(mapEntry(cursor, mDb))
+                count++
+                cursor.moveToNext()
+            }
+        println(count)
+            cursor.close()
+        /*} catch (e : Exception) {
+            println("Table is empty")
+        }*/
         return entries
     }
 

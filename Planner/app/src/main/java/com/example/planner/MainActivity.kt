@@ -36,15 +36,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addToJournalPassedEvents() {
-        val delay = computateDelay()
-        val dailyWorkRequest = OneTimeWorkRequestBuilder<EventTimer>()
-            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
+        //val delay = computateDelay()
+        val dailyWorkRequest = PeriodicWorkRequestBuilder<EventTimer>(8, TimeUnit.HOURS)
             .build()
         WorkManager.getInstance(applicationContext)
-            .enqueueUniqueWork("Adding events to journal", ExistingWorkPolicy.KEEP, dailyWorkRequest)
+            .enqueueUniquePeriodicWork("Adding events to journal", ExistingPeriodicWorkPolicy.KEEP, dailyWorkRequest)
     }
 
-    private fun computateDelay() : Long {
+    /*private fun computateDelay() : Long {
         val currentDate = Calendar.getInstance()
         val dueDate = Calendar.getInstance()
         // Set Execution around 05:00:00 AM
@@ -55,5 +54,5 @@ class MainActivity : AppCompatActivity() {
             dueDate.add(Calendar.HOUR_OF_DAY, 24)
         }
         return dueDate.timeInMillis - currentDate.timeInMillis
-    }
+    }*/
 }
