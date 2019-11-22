@@ -64,7 +64,7 @@ class EventService {
         }
 
         //debugging print
-        val cursorDebug2 = mDb.rawQuery("SELECT * FROM event_param", null)
+        /*val cursorDebug2 = mDb.rawQuery("SELECT * FROM event_param", null)
         cursorDebug2.moveToFirst()
         while (!cursorDebug2.isAfterLast) {
             println(cursorDebug2.getString(cursorDebug2.getColumnIndex("event_id"))
@@ -89,7 +89,7 @@ class EventService {
             println(cursorDebug1.getString(cursorDebug1.getColumnIndex("name")))
             cursorDebug1.moveToNext()
         }
-        cursorDebug1.close()
+        cursorDebug1.close()*/
     }
 
 
@@ -104,7 +104,7 @@ class EventService {
                 val cursor2 = mDb.rawQuery("SELECT * FROM event WHERE id = $event_id", null)
                 cursor2.moveToFirst()
                 var event : Event = mapEvent(cursor2, mDb)
-                println("Event : " + event.getID() + " " + event.getDescription() + "  " + event.getTime() + " " + event.getName())
+                //println("Event : " + event.getID() + " " + event.getDescription() + "  " + event.getTime() + " " + event.getName())
                 events.add(mapEvent(cursor2, mDb))
                 cursor1.moveToNext()
                 cursor2.close()
@@ -129,7 +129,7 @@ class EventService {
 
     }
 
-    fun returnAllEventsInGivenPeriodOfTime(start : Long, end : Long, mDb : SQLiteDatabase) : MutableList<Event> {
+    /*fun returnAllEventsInGivenPeriodOfTime(start : Long, end : Long, mDb : SQLiteDatabase) : MutableList<Event> {
         val cursor = mDb.rawQuery("SELECT * From event_param WHERE (time > $start AND time < $end);",null)
         var events : MutableList<Event> = LinkedList<Event>()
 
@@ -148,7 +148,7 @@ class EventService {
         }
         cursor.close()
         return events
-    }
+    }*/
 
     private fun mapEvent(cursor : Cursor, mDb: SQLiteDatabase) : Event {
         var e : Event = Event()

@@ -9,12 +9,16 @@ import java.io.IOException
 
 
 /** Implements specific methods for interaction with app. Wrapper over EventService functionality and TriggerService functionality. */
-class DatabaseWorker {
+class DatabaseWorker() {
     private lateinit var mDBHelper: DatabaseHelper
     private lateinit var mDb: SQLiteDatabase
     private var eventService : EventService = EventService()
     private var triggerService : TriggerService = TriggerService()
     private var journalEntryService : JournalEntryService = JournalEntryService()
+
+    /*constructor(initTime : Long) {
+        journalEntryService = JournalEntryService(initTime)
+    }*/
 
     fun setConnection(context : Context) {
         mDBHelper = DatabaseHelper(context)
@@ -61,6 +65,10 @@ class DatabaseWorker {
     }
 
     fun addEventsToJournal() {
-        journalEntryService.addPassedEvents(mDb)
+        journalEntryService.addPassedEvents(mDb, eventService, triggerService)
+    }
+
+    fun getEntriesForGivenPeriodOfTime(start : Long, end : Long) : List<JournalEntry> {
+        return journalEntryService.getEntriesForGivenPeriodOfTime(start, end, mDb)
     }
 }

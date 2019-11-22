@@ -46,6 +46,8 @@ class EventTimer(appContext: Context, workerParams: WorkerParameters)
         var chosenTriggers: MutableList<Trigger> = LinkedList<Trigger>()
         chosenTriggers.add(Trigger(3, TriggerRule.WEDNESDAY))
         connection.addEvent(event, chosenTriggers)
+
+        connection.addEventsToJournal()
         connection.closeConnection()
         connection.getmDb().close()
 

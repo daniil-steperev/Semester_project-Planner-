@@ -55,20 +55,21 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         maxDate.add(Calendar.YEAR, 1)
 
 
-        contentManager = CalendarContentManager(this, agenda_calendar_view,
+        contentManager = CalendarContentManager(
+            this, agenda_calendar_view,
             SampleEventAgendaAdapter(applicationContext)
         )
 
         contentManager.locale = Locale.ENGLISH
         contentManager.setDateRange(minDate, maxDate)
 
-        var dbLocked  = true
+        var dbLocked = true
         var connection = DatabaseWorker()
         while (dbLocked) {
             try {
                 connection.setConnection(this)
                 dbLocked = false
-            } catch (e : SQLiteDatabaseLockedException) {
+            } catch (e: SQLiteDatabaseLockedException) {
                 Thread.sleep(10)
             }
         }
@@ -78,7 +79,7 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         event.setDescription("Problem-solution essay")
         event.setTime(1573145514481)
 
-        var chosenTriggers : MutableList<Trigger> = LinkedList()
+        var chosenTriggers: MutableList<Trigger> = LinkedList()
         chosenTriggers.add(Trigger(4, TriggerRule.THURSDAY))
         connection.addEvent(event, chosenTriggers)
 
@@ -87,19 +88,36 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         event1.setDescription("in the forest")
         event1.setTime(1573126512000)
         connection.deleteEvent(event1)
+        //count+
+        val day = Calendar.getInstance(Locale.ENGLISH)
 
-        val day = Calendar.getInstance()
+        var currentTime = System.currentTimeMillis()
+        val passedEvents = connection.getEntriesForGivenPeriodOfTime(minDate.timeInMillis, System.currentTimeMillis())
 
-        var initDay = minDate.timeInMillis
-        var count : Int = 0
-        while (initDay < maxDate.timeInMillis) {
-            var list : List<Event> =  connection.readEventsForToday(initDay)
+        for (i in passedEvents) {
+            val day = Calendar.getInstance(Locale.ENGLISH)
+            day.timeInMillis = i.getTime()
+            eventList.add(
+                MyCalendarEvent(
+                    day,
+                    day,
+                    DayItem.buildDayItemFromCal(day),
+                    SampleEvent(
+                        0,
+                        name = i.getName(),
+                        description = i.getDescription()
+                    )
+                ).setEventInstanceDay(day)
+            )
+        }
+
+        while (currentTime < maxDate.timeInMillis) {
+            var list : List<Event> =  connection.readEventsForToday(currentTime)
             val day = Calendar.getInstance()
-            //count++
             for (i in list) {
                 val day = Calendar.getInstance(Locale.ENGLISH)
-                if (i.getTime() <= initDay) {
-                    day.timeInMillis = initDay
+                if (i.getTime() <= currentTime) {
+                    day.timeInMillis = currentTime
                     eventList.add(
                         MyCalendarEvent(
                             day,
@@ -114,8 +132,9 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
                     )
                 }
             }
-            initDay += 86400000
+            currentTime += 86400000
         }
+
 
         connection.closeConnection()
         connection.getmDb().close()
