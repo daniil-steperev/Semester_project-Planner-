@@ -19,15 +19,6 @@ import kotlinx.android.synthetic.main.activity_calendar.*
 
 import java.util.*
 import kotlin.collections.ArrayList
-import androidx.work.OneTimeWorkRequest
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import androidx.work.WorkManager
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import androidx.work.Constraints
-import java.util.concurrent.TimeUnit
-
 
 class CalendarActivity : AppCompatActivity(), CalendarController {
 

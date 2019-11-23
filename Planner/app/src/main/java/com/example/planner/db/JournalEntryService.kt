@@ -1,11 +1,24 @@
 package com.example.planner.db
 
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import androidx.core.graphics.toColorLong
 import java.util.*
 
-class JournalEntryService() {
-    private var lastEntryDate : Long = computateInitDate()
+class JournalEntryService {
+
+    private var lastEntryDate : Long = 0
+
+    /*constructor (lastDate : Long) {
+        println("WE ARE IN CONSRTRUCTOR")
+        if (lastDate == 0.toLong()) {
+            println("COMPUTATEINITDATE")
+            lastEntryDate = computateInitDate()
+            println("NOW DATE IS" + lastEntryDate)
+        }
+    }*/
 
     fun computateInitDate() : Long {
         var minDate= Calendar.getInstance()
@@ -14,11 +27,28 @@ class JournalEntryService() {
         return minDate.timeInMillis
     }
 
+
+    fun setLastEntryDate(date : Long) {
+        println("WE ARE IN SETTER")
+        if (date == 0.toLong()) {
+            println("COMPUTATEINITDATE")
+            lastEntryDate = computateInitDate()
+            println("NOW DATE IS" + lastEntryDate)
+            return
+        }
+        lastEntryDate = date
+    }
+
+    fun getLastEntryDate() : Long {
+        return lastEntryDate
+    }
+
     fun addPassedEvents(mDb : SQLiteDatabase, eventService : EventService, triggerService: TriggerService) {
+
         var currentTime = System.currentTimeMillis()
+
+        println("dates now is " + lastEntryDate + " " + currentTime)
         //var eventsToAdd  = eventService.returnAllEventsInGivenPeriodOfTime(lastEntryDate, currentTime, mDb)
-        println("HOHO")
-        println("HOHO " + lastEntryDate + " " + currentTime)
         while (lastEntryDate < currentTime) {
             var triggers : MutableList<Trigger> = triggerService.readTrigger(mDb, lastEntryDate)
             var list : List<Event> =  eventService.readEvent(triggers, mDb)
