@@ -30,6 +30,11 @@ android {
     }
 }
 
+repositories {
+    jcenter()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+}
+
 dependencies {
     def work_version = "2.2.0"
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -41,7 +46,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.ognev.kotlin.agendacalendarview:kotlin-agendacalendarview:1.0'
-    implementation 'com.ognev.kotlin.agendacalendarview:kotlin-agendacalendarview:1.0'
-    implementation 'com.ognev.kotlin.agendacalendarview:kotlin-agendacalendarview:1.0'
-    implementation "androidx.work:work-runtime-ktx:$work_version"
+    implementation 'com.r0adkll:slidableactivity:2.0.5'
 }

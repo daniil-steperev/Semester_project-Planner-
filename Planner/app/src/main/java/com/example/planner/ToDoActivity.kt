@@ -9,15 +9,15 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.get
 import androidx.core.view.setPadding
 import androidx.core.view.size
 import com.example.planner.dialogs.CreateTaskDialog
+import com.example.planner.gestures.BaseSwipeToDismissActivity
 import java.sql.Time
 
 @Suppress("DEPRECATION")
-class ToDoActivity : AppCompatActivity(), View.OnClickListener {
+class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
     private lateinit var llMain : LinearLayout
     private lateinit var addButton : Button
     private lateinit var deleteButton : Button
@@ -26,6 +26,14 @@ class ToDoActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var currentDate: CurrentDate
     private lateinit var timeThread : TimeThread
+
+    override fun getLayoutId(): Int {
+        return R.layout.statistics
+    }
+
+    override fun isActivityDraggable(): Boolean {
+        return true
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

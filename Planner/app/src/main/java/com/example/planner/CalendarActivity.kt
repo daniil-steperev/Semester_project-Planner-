@@ -9,6 +9,7 @@ import com.example.planner.calendar.SampleEvent
 import com.example.planner.calendar.SampleEventAgendaAdapter
 import com.example.planner.calendar.isSameDay
 import com.example.planner.db.*
+import com.example.planner.gestures.BaseSwipeToDismissActivity
 import com.ognev.kotlin.agendacalendarview.CalendarController
 import com.ognev.kotlin.agendacalendarview.CalendarManager
 import com.ognev.kotlin.agendacalendarview.builder.CalendarContentManager
@@ -21,7 +22,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
-class CalendarActivity : AppCompatActivity(), CalendarController {
+class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
 
     private var oldDate: Calendar? = null
     private var eventList: MutableList<CalendarEvent> = ArrayList()
@@ -32,6 +33,14 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
     private var endMonth: Int = Calendar.getInstance().get(Calendar.MONTH)
 
     private var loadingTask: LoadingTask? = null
+
+    override fun getLayoutId(): Int {
+        return R.layout.statistics
+    }
+
+    override fun isActivityDraggable(): Boolean {
+        return true
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
