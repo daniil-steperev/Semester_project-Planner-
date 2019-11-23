@@ -18,6 +18,7 @@ import com.ognev.kotlin.agendacalendarview.models.IDayItem
 import kotlinx.android.synthetic.main.activity_calendar.*
 
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 class CalendarActivity : AppCompatActivity(), CalendarController {
@@ -106,6 +107,7 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         }
 
         println("In cycle in future")
+        currentTime += 86400000
         while (currentTime < maxDate.timeInMillis) {
             var list : List<Event> =  connection.readEventsForToday(currentTime)
             val day = Calendar.getInstance()
