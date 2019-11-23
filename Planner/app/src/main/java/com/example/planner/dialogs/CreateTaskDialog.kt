@@ -1,9 +1,6 @@
 package com.example.planner.dialogs
 
-import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +9,6 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TimePicker
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.DialogFragment
 import com.example.planner.DatabaseWorker
 import com.example.planner.R
@@ -22,7 +18,6 @@ import com.example.planner.db.Event
 import com.example.planner.db.EventService
 import com.example.planner.db.TriggerRule
 import java.util.*
-import kotlin.math.min
 
 class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(), View.OnClickListener {
     var isReady = false;
@@ -33,6 +28,8 @@ class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(
 
     private lateinit var taskEditor : EditText
     private lateinit var timePicker : TimePicker
+
+    private lateinit var allDayAssignment : CheckBox
 
     private lateinit var cBoxMonday : CheckBox
     private lateinit var cBoxTuesday : CheckBox
@@ -65,6 +62,8 @@ class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(
         taskEditor = view.findViewById(R.id.task_editor)
         timePicker = view.findViewById(R.id.time_picker)
         timePicker.setIs24HourView(true)
+
+        allDayAssignment = view.findViewById(R.id.all_day_assignment)
 
         cBoxMonday = view.findViewById(R.id.monday_repeat)
         cBoxTuesday = view.findViewById(R.id.tuesday_repeat)
@@ -112,8 +111,12 @@ class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(
 
                 task.setTask(taskName)
 
-                val hour = timePicker.currentHour
-                val minute = timePicker.currentMinute
+                var hour = 23
+                var minute = 59
+                if (!allDayAssignment.isChecked) { // if time is set
+                    hour = timePicker.currentHour
+                    minute = timePicker.currentMinute
+                }
 
                 addToDataBase(hour, minute)
                 toDoActivity.updateTaskList()
