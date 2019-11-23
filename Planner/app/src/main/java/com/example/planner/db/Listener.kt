@@ -22,6 +22,8 @@ class Listener {
             mDb.setTransactionSuccessful()
             mDb.endTransaction()
 
+            cursor.close()
+
             val cursor1 = mDb.rawQuery("SELECT * FROM listener", null)
             println("PRINT listener table")
             cursor1.moveToFirst()
@@ -47,5 +49,6 @@ class Listener {
             println(cursor.getString(cursor.getColumnIndex("trigger_id")))
             cursor.moveToNext()
         }
+        cursor.close()
     }
 }
