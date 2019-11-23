@@ -1,30 +1,38 @@
 package com.example.planner
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MotionEvent
+import android.view.View
+import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
-import androidx.fragment.app.Fragment
-import com.example.planner.fragments.MenuFragment
-import com.example.planner.fragments.StatisticsFragment
-import com.example.planner.fragments.ToDoFragment
 import com.example.planner.gestures.DetectSwipeGesturesListener
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var gestureDetector : GestureDetectorCompat
+
+    private lateinit var btnToTodo : Button
+    private lateinit var btnToCat : Button
+    private lateinit var btnToNotes : Button
+    private lateinit var btnToCalendar : Button
+    private lateinit var btnToStatistics : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.pager)
+        setContentView(R.layout.activity_menu)
 
-        var list : MutableList<Fragment> = mutableListOf()
-        val pageFragment1 = ToDoFragment()
-        val pageFragment2 = MenuFragment()
-        val pageFragment3 = StatisticsFragment()
-        list.add(pageFragment1)
-        list.add(pageFragment2)
-        list.add(pageFragment3)
+        btnToTodo = findViewById(R.id.btnToToDO)
+        btnToCat = findViewById(R.id.btnToCat)
+        btnToNotes = findViewById(R.id.btnToNotes)
+        btnToCalendar = findViewById(R.id.btnToCalendar)
+        btnToStatistics = findViewById(R.id.btnToStatistics)
+
+        btnToTodo.setOnClickListener {view -> onClick(view)}
+        btnToCat.setOnClickListener {view -> onClick(view)}
+        btnToNotes.setOnClickListener {view -> onClick(view)}
+        btnToCalendar.setOnClickListener {view -> onClick(view)}
+        btnToStatistics.setOnClickListener {view -> onClick(view)}
 
         val gestureListener = DetectSwipeGesturesListener(this, ToDoActivity(), StatisticsActivity())
         gestureDetector = GestureDetectorCompat(this, gestureListener)
@@ -38,5 +46,25 @@ class MainActivity : AppCompatActivity() {
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         gestureDetector.onTouchEvent(event)
         return true
+    }
+
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.btnToToDO -> {
+                startActivity(Intent(this, ToDoActivity::class.java))
+            }
+
+            R.id.btnToCat -> {
+                startActivity(Intent(this, CatActivity::class.java))
+            }
+
+            R.id.btnToCalendar -> {
+                startActivity(Intent(this, CalendarActivity::class.java))
+            }
+
+            R.id.btnToStatistics -> {
+                startActivity(Intent(this, StatisticsActivity::class.java))
+            }
+        }
     }
 }

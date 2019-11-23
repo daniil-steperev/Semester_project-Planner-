@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.view.GestureDetector
 import android.view.MotionEvent
+import com.example.planner.R
 import kotlin.math.abs
 
 class DetectSwipeGesturesListener(
@@ -26,9 +27,10 @@ class DetectSwipeGesturesListener(
         if (absDeltaX >= MIN_SWIPE_DISTANCE && absDeltaX <= MAX_SWIPE_DISTANCE) {
             if (deltaX > 0) {
                 mainActivity.startActivity(Intent(mainActivity, rightActivity::class.java))
-                println("SWIPE LEFT HERE")
+                mainActivity.overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left)
             } else {
                 mainActivity.startActivity(Intent(mainActivity, leftActivity::class.java))
+                mainActivity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_right)
             }
         }
 

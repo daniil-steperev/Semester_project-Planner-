@@ -23,6 +23,11 @@ android {
     }
 }
 
+repositories {
+    jcenter()
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -33,6 +38,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.ognev.kotlin.agendacalendarview:kotlin-agendacalendarview:1.0'
-    implementation 'com.ognev.kotlin.agendacalendarview:kotlin-agendacalendarview:1.0'
-    implementation 'com.ognev.kotlin.agendacalendarview:kotlin-agendacalendarview:1.0'
+    implementation 'com.r0adkll:slidableactivity:2.0.5'
 }
