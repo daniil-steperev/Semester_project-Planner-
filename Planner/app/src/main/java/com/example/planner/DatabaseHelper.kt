@@ -100,6 +100,6 @@ class DatabaseHelper(private val mContext: Context) :
     companion object {
         private val DB_NAME = "info.db"
         private var DB_PATH = ""
-        private val DB_VERSION = 8
+        private val DB_VERSION = 9
     }
 }

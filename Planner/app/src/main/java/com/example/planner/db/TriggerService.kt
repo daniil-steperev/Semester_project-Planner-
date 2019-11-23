@@ -19,6 +19,7 @@ class TriggerService {
             cursor.moveToNext()
         }
 
+        cursor.close()
         return triggerList
     }
 

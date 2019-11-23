@@ -8,6 +8,9 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
 import com.example.planner.gestures.DetectSwipeGesturesListener
+import java.util.concurrent.TimeUnit
+import android.content.SharedPreferences
+import androidx.work.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var gestureDetector : GestureDetectorCompat
@@ -36,11 +39,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         val gestureListener = DetectSwipeGesturesListener(this, ToDoActivity(), StatisticsActivity())
         gestureDetector = GestureDetectorCompat(this, gestureListener)
-
-            //pager = findViewById(R.id.pager)
-        //pageAdapter = SlidePagerAdapter(supportFragmentManager, list, this)
-
-        //pager.adapter = pageAdapter
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -66,5 +64,27 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 startActivity(Intent(this, StatisticsActivity::class.java))
             }
         }
+
+        addToJournalPassedEvents()
     }
+
+    private fun addToJournalPassedEvents() {
+        val dailyWorkRequest = PeriodicWorkRequestBuilder<EventTimer>(8, TimeUnit.HOURS)
+            .build()
+        WorkManager.getInstance(applicationContext)
+            .enqueueUniquePeriodicWork("Adding events to journal", ExistingPeriodicWorkPolicy.KEEP, dailyWorkRequest)
+    }
+
+    /*private fun computateDelay() : Long {
+        val currentDate = Calendar.getInstance()
+        val dueDate = Calendar.getInstance()
+        // Set Execution around 05:00:00 AM
+        dueDate.set(Calendar.HOUR_OF_DAY, 5)
+        dueDate.set(Calendar.MINUTE, 0)
+        dueDate.set(Calendar.SECOND, 0)
+        if (dueDate.before(currentDate)) {
+            dueDate.add(Calendar.HOUR_OF_DAY, 24)
+        }
+        return dueDate.timeInMillis - currentDate.timeInMillis
+    }*/
 }
