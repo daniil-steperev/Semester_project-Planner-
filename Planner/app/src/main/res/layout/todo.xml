@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".ToDoActivity">
 
     <ScrollView
@@ -27,7 +28,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/page_name"
-                    android:textSize="36sp"/>
+                    android:textSize="36sp" />
 
                 <LinearLayout
                     android:id="@+id/current_data"
@@ -81,32 +82,31 @@
                         android:id="@+id/add_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
                         android:layout_margin="20dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/add_button"
+                        android:gravity="center"
                         android:text="@string/add_button_todo"
-                        android:textSize="20sp"
-                        android:background="@drawable/add_button"/>
+                        android:textSize="20sp" />
 
                     <Button
                         android:id="@+id/delete_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
                         android:layout_margin="20dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/remove_button"
+                        android:gravity="center"
                         android:text="@string/delete_button_todo"
-                        android:textSize="20sp"
-                        android:background="@drawable/remove_button"/>
+                        android:textSize="20sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/todo_window"
-                    android:background="@drawable/todo_background"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
-                </LinearLayout>
+                    android:background="@drawable/todo_background"
+                    android:orientation="vertical" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

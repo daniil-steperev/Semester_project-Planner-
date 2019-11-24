@@ -1,20 +1,13 @@
 package com.example.planner
 
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.database.sqlite.SQLiteDatabaseLockedException
-import android.provider.SyncStateContract
-import android.util.Log
-import androidx.work.Operation.State.SUCCESS
-import javax.xml.datatype.DatatypeConstants.SECONDS
-import androidx.annotation.NonNull
-import androidx.work.*
+import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.example.planner.db.Event
 import com.example.planner.db.Trigger
 import com.example.planner.db.TriggerRule
 import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.time.hours
 
 
 class EventTimer(appContext: Context, workerParams: WorkerParameters)
@@ -43,8 +36,8 @@ class EventTimer(appContext: Context, workerParams: WorkerParameters)
         event.setDescription("Dance!!!")
         event.setTime(System.currentTimeMillis())
 
-        var chosenTriggers: MutableList<Trigger> = LinkedList<Trigger>()
-        chosenTriggers.add(Trigger(3, TriggerRule.WEDNESDAY))
+        var chosenTriggers: MutableList<TriggerRule> = mutableListOf()
+        chosenTriggers.add(TriggerRule.WEDNESDAY)
         connection.addEvent(event, chosenTriggers)
 
         connection.addEventsToJournal()

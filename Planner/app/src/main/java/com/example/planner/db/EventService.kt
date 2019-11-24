@@ -2,6 +2,7 @@ package com.example.planner.db
 
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import com.example.planner.DatabaseHelper
 import java.util.*
 
 class EventService {
@@ -35,7 +36,6 @@ class EventService {
     }
 
     fun getAllEventsForToday(mDb : SQLiteDatabase, originalCalendar : Calendar) : MutableList<Event> {
-        printAllEvents(mDb)
         val calendar = GregorianCalendar()
         calendar.timeInMillis = originalCalendar.timeInMillis
 

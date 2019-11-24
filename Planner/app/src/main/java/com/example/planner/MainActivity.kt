@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GestureDetectorCompat
 import com.example.planner.gestures.DetectSwipeGesturesListener
 import java.util.concurrent.TimeUnit
-import android.content.SharedPreferences
 import androidx.work.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {

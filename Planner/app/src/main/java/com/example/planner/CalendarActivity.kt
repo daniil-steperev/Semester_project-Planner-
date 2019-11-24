@@ -82,8 +82,8 @@ class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
         event.setDescription("Problem-solution essay")
         event.setTime(1573145514481)
 
-        var chosenTriggers: MutableList<Trigger> = LinkedList()
-        chosenTriggers.add(Trigger(4, TriggerRule.THURSDAY))
+        var chosenTriggers: MutableList<TriggerRule> = LinkedList()
+        chosenTriggers.add(TriggerRule.THURSDAY)
         connection.addEvent(event, chosenTriggers)
 
         var event1 = Event()

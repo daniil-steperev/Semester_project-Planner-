@@ -1,6 +1,7 @@
 package com.example.planner
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -17,6 +18,7 @@ import com.example.planner.dialogs.CreateTaskDialog
 import com.example.planner.dialogs.RemoveTaskDialog
 import java.sql.Time
 import com.example.planner.gestures.BaseSwipeToDismissActivity
+import kotlinx.android.synthetic.main.menu.*
 
 @Suppress("DEPRECATION")
 class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
@@ -92,7 +94,6 @@ class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
 
         llMain.removeAllViews()
 
-
         for (task in addedTasks) { // add task in right order
             val newLine = getNewTaskLine(task)
             llMain.addView(newLine, lParams)
@@ -124,6 +125,9 @@ class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
 
         val taskLayoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT, 3f)
+
+        time.setBackgroundColor(Color.WHITE)
+        task.setBackgroundColor(Color.WHITE)
 
         newLine.addView(time, timeLayoutParams)
         newLine.addView(task, taskLayoutParams)

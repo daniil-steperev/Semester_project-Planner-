@@ -61,9 +61,14 @@ class RemoveTaskDialog(private val tasks : ArrayList<Task>, private val activity
     }
 
     private fun addCheckBoxesToScreen() {
+        val lParams = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
         for (task in taskList) {
             val newLine = getNewCheckBoxLine(task)
-            window.addView(newLine)
+            window.addView(newLine, lParams)
         }
     }
 
