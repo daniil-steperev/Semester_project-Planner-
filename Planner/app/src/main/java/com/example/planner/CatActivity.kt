@@ -6,8 +6,17 @@ import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_cat.*
 import android.util.Log
 import android.util.Log.INFO
+import com.example.planner.gestures.BaseSwipeToDismissActivity
 
-class CatActivity : AppCompatActivity() {
+class CatActivity : BaseSwipeToDismissActivity() {
+
+    override fun getLayoutId(): Int {
+        return R.layout.statistics
+    }
+
+    override fun isActivityDraggable(): Boolean {
+        return true
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

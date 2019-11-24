@@ -102,6 +102,7 @@
 
                 <LinearLayout
                     android:id="@+id/todo_window"
+                    android:background="@drawable/todo_background"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">

@@ -1,5 +1,6 @@
 package com.example.planner
 
+import android.database.sqlite.SQLiteDatabaseLockedException
 import android.os.AsyncTask
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,7 @@ import com.example.planner.calendar.SampleEvent
 import com.example.planner.calendar.SampleEventAgendaAdapter
 import com.example.planner.calendar.isSameDay
 import com.example.planner.db.*
+import com.example.planner.gestures.BaseSwipeToDismissActivity
 import com.ognev.kotlin.agendacalendarview.CalendarController
 import com.ognev.kotlin.agendacalendarview.CalendarManager
 import com.ognev.kotlin.agendacalendarview.builder.CalendarContentManager
@@ -17,9 +19,10 @@ import com.ognev.kotlin.agendacalendarview.models.IDayItem
 import kotlinx.android.synthetic.main.activity_calendar.*
 
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
-class CalendarActivity : AppCompatActivity(), CalendarController {
+class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
 
     private var oldDate: Calendar? = null
     private var eventList: MutableList<CalendarEvent> = ArrayList()
@@ -30,6 +33,14 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
     private var endMonth: Int = Calendar.getInstance().get(Calendar.MONTH)
 
     private var loadingTask: LoadingTask? = null
+
+    override fun getLayoutId(): Int {
+        return R.layout.statistics
+    }
+
+    override fun isActivityDraggable(): Boolean {
+        return true
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,38 +56,74 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
         maxDate.add(Calendar.YEAR, 1)
 
 
-        contentManager = CalendarContentManager(this, agenda_calendar_view,
+        contentManager = CalendarContentManager(
+            this, agenda_calendar_view,
             SampleEventAgendaAdapter(applicationContext)
         )
 
         contentManager.locale = Locale.ENGLISH
         contentManager.setDateRange(minDate, maxDate)
 
+        var dbLocked = true
         var connection = DatabaseWorker()
-        connection.setConnection(this)
+        while (dbLocked) {
+            try {
+                connection.setConnection(this)
+                dbLocked = false
+            } catch (e: SQLiteDatabaseLockedException) {
+                Thread.sleep(10)
+            }
+        }
+
+        println("Connected to the db")
 
         var event = Event()
         event.setName("English")
         event.setDescription("Problem-solution essay")
         event.setTime(1573145514481)
 
-        /*var date1 : Date = Date(minDate.timeInMillis)
-        println("mindate" + minDate.timeInMillis + " " + date1.year + " " + date1.month + " " + date1.day )
-        var date2 : Date = Date(maxDate.timeInMillis)
-        println("maxdate" + " " + minDate.timeInMillis + " " + date2.year + " " + date2.month + " " + date2.day )*/
+        var chosenTriggers: MutableList<Trigger> = LinkedList()
+        chosenTriggers.add(Trigger(4, TriggerRule.THURSDAY))
+        connection.addEvent(event, chosenTriggers)
 
-        val day = Calendar.getInstance()
+        var event1 = Event()
+        event1.setName("walking")
+        event1.setDescription("in the forest")
+        event1.setTime(1573126512000)
+        connection.deleteEvent(event1)
 
-        var initDay = minDate.timeInMillis
-        var count : Int = 0
-        while (initDay < maxDate.timeInMillis) {
-            var list : List<Event> =  connection.readEventsForToday(initDay)
+        println("removed added events")
+
+        var currentTime = System.currentTimeMillis()
+        val passedEvents = connection.getEntriesForGivenPeriodOfTime(minDate.timeInMillis, System.currentTimeMillis())
+
+        println("In cycle in journal")
+        for (i in passedEvents) {
+            val day = Calendar.getInstance(Locale.ENGLISH)
+            day.timeInMillis = i.getTime()
+            eventList.add(
+                MyCalendarEvent(
+                    day,
+                    day,
+                    DayItem.buildDayItemFromCal(day),
+                    SampleEvent(
+                        0,
+                        name = i.getName(),
+                        description = i.getDescription()
+                    )
+                ).setEventInstanceDay(day)
+            )
+        }
+
+        println("In cycle in future")
+        currentTime += 86400000
+        while (currentTime < maxDate.timeInMillis) {
+            var list : List<Event> =  connection.readEventsForToday(currentTime)
             val day = Calendar.getInstance()
-            //count++
             for (i in list) {
                 val day = Calendar.getInstance(Locale.ENGLISH)
-                if (i.getTime() <= initDay) {
-                    day.timeInMillis = initDay
+                if (i.getTime() <= currentTime) {
+                    day.timeInMillis = currentTime
                     eventList.add(
                         MyCalendarEvent(
                             day,
@@ -91,41 +138,13 @@ class CalendarActivity : AppCompatActivity(), CalendarController {
                     )
                 }
             }
-            initDay += 86400000
-        }
-        /*println("Events actual for 14 november")
-        var list : List<Event> =  connection.readEventsForToday(1573678800000)
-        for (i in list) {
-            println(i.getName() + " " + i.getTime() + " " + i.getDescription())
+            currentTime += 86400000
         }
 
-        val day = Calendar.getInstance()
-
-
-        for (i in list) {
-            val day = Calendar.getInstance(Locale.ENGLISH)
-            day.timeInMillis = i.getTime()
-            eventList.add(MyCalendarEvent(day, day,
-                DayItem.buildDayItemFromCal(day), SampleEvent(0, name = i.getName(), description = i.getDescription())).setEventInstanceDay(day))
-        }*/
 
         connection.closeConnection()
         connection.getmDb().close()
 
-
-        val maxLength = Calendar.getInstance().getMaximum(Calendar.DAY_OF_MONTH)
-
-        for (i in 1..maxLength) {
-            val day = Calendar.getInstance(Locale.ENGLISH)
-            day.timeInMillis = System.currentTimeMillis()
-            day.set(Calendar.DAY_OF_MONTH, i)
-
-            eventList.add(
-                MyCalendarEvent(
-                    day, day,
-                    DayItem.buildDayItemFromCal(day), null
-                ).setEventInstanceDay(day))
-        }
         contentManager.loadItemsFromStart(eventList)
     }
 
