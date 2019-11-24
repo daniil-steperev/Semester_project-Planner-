@@ -4,6 +4,7 @@
     <string name="task_name">Task</string>
     <string name="create_task_button">Add</string>
     <string name="repeatness">Repeatness</string>
+    <string name="all_day_assignment">All day assignment</string>
 
     <string name="Monday">Monday</string>
     <string name="Tuesday">Tuesday</string>

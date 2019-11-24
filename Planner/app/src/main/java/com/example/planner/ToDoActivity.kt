@@ -12,13 +12,16 @@ import android.widget.Toast
 import androidx.core.view.get
 import androidx.core.view.setPadding
 import androidx.core.view.size
+import com.example.planner.db.EventService
 import com.example.planner.dialogs.CreateTaskDialog
-import com.example.planner.gestures.BaseSwipeToDismissActivity
+import com.example.planner.dialogs.RemoveTaskDialog
 import java.sql.Time
+import com.example.planner.gestures.BaseSwipeToDismissActivity
 
 @Suppress("DEPRECATION")
 class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
     private lateinit var llMain : LinearLayout
+  
     private lateinit var addButton : Button
     private lateinit var deleteButton : Button
 
@@ -42,9 +45,10 @@ class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
         llMain = findViewById(R.id.todo_window)
         addButton = findViewById(R.id.add_button)
         deleteButton = findViewById(R.id.delete_button)
-        addedTasks = getAddedTasks()
+        addedTasks = ArrayList()
 
         initializeDate()
+        updateTaskList()
 
         addButton.setOnClickListener(this)
         deleteButton.setOnClickListener(this)
@@ -71,43 +75,42 @@ class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
             }
 
             R.id.delete_button -> {
-                if (llMain.size > 0) {
-                    llMain.removeView(llMain.get(llMain.size - 1))
-                    addedTasks.remove(addedTasks.get(addedTasks.lastIndex))
-                }
-                Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show()
+                val removeTaskDialog = RemoveTaskDialog(addedTasks, this)
+                removeTaskDialog.show(supportFragmentManager, "removeTaskDialog")
             }
         }
     }
 
-    fun addToTaskList(newTask : Task) {
+    private fun addToTaskList(newTask : Task) {
         val lParams = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
         addedTasks.add(newTask)
+        addedTasks.sort() // sort tasks
 
-        if (addedTasks.size != 0) {
-            addedTasks.sort() // sort tasks
-            if (llMain.size > 0) { // remove other tasks if they present
-                llMain.removeAllViews()
-            }
+        llMain.removeAllViews()
 
-            for (task in addedTasks) { // add task in right order
-                val newLine = getNewTaskLine(task.getTime(), task.getTask())
-                llMain.addView(newLine, lParams)
-            }
+
+        for (task in addedTasks) { // add task in right order
+            val newLine = getNewTaskLine(task)
+            llMain.addView(newLine, lParams)
         }
     }
 
-    private fun getNewTaskLine(timeText : Time, taskText : String) : LinearLayout {
+    private fun getNewTaskLine(task : Task) : LinearLayout {
+        val timeValue = task.getTime().toString()
+        val taskText = task.getTask()
+
         val newLine = LinearLayout(this)
         newLine.orientation = LinearLayout.HORIZONTAL
 
         val time = TextView(this)
         time.setPadding(5)
-        time.text = timeText.toString()
+
+        val timeWithoutSeconds = timeValue.subSequence(0, timeValue.lastIndexOf(':'))
+        time.text = timeWithoutSeconds
         time.textSize = 20.toFloat()
 
         val task = TextView(this)
@@ -128,12 +131,27 @@ class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
         return newLine
     }
 
-    private fun getAddedTasks() : ArrayList<Task> {
-        val tasks = emptyArray<Task>()
+    fun updateTaskList() {
         // Получить из базы данных список дел на день, выполнить сортировку
+        addedTasks = ArrayList()
 
-        tasks.sort()
-        return arrayListOf()
+        val connection = DatabaseWorker()
+        connection.setConnection(this)
+        val eventService = EventService()
+
+        println("GETTING ALL EVENTS FOR TODAY")
+        val events = eventService.getAllEventsForToday(connection.getmDb(), currentDate.calendar)
+        for (event in events) {
+            println("ADDING NEW EVENT")
+            val newTask = Task()
+            newTask.makeFromEvent(event)
+
+            addToTaskList(newTask)
+        }
+
+        if (events.size == 0) {
+            llMain.removeAllViews()
+        }
     }
 
     inner class TimeThread : Thread() {

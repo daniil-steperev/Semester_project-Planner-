@@ -1,13 +1,17 @@
 package com.example.planner.db
 
-class Event {
+class Event() {
     private var id : Long = 0
-    private lateinit var name: String
+    private var name = ""
     private lateinit var description : String
     private var time : Long = 0
     private var doneSuccessful : Boolean = false
 
-    constructor()
+    constructor(name : String, description : String, time : Long) : this() {
+        this.name = name
+        this.description = description
+        this.time = time
+    }
 
     fun setDescription(result : String) {
         description = result

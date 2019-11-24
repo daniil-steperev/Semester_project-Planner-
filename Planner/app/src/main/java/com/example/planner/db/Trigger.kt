@@ -1,7 +1,5 @@
 package com.example.planner.db
 
-import java.sql.Time
-import java.time.LocalDateTime
 import java.util.*
 
 class Trigger {

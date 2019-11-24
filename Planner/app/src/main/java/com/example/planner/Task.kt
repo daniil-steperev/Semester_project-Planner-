@@ -1,6 +1,8 @@
 package com.example.planner
 
+import com.example.planner.db.Event
 import com.example.planner.db.TriggerRule
+import java.lang.StringBuilder
 import java.sql.Time
 import java.util.*
 
@@ -52,6 +54,15 @@ class Task(private var date: Date, private var time: Time, private var task: Str
 
     fun isRuleContains(newRule : TriggerRule) : Boolean {
         return rule.contains(newRule)
+    }
+
+    fun makeFromEvent(event : Event) {
+        val calendar = GregorianCalendar()
+        calendar.timeInMillis = event.getTime()
+
+        date = calendar.time
+        time = Time(date.time)
+        task = event.getName()
     }
 
     override fun compareTo(otherTask : Task): Int {
