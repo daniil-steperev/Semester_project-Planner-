@@ -1,6 +1,7 @@
-package com.example.planner
+package com.example.planner.todo
 
 import android.annotation.SuppressLint
+import android.database.sqlite.SQLiteDatabaseLockedException
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
@@ -9,16 +10,13 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.view.get
 import androidx.core.view.setPadding
-import androidx.core.view.size
+import com.example.planner.DatabaseWorker
+import com.example.planner.R
 import com.example.planner.db.EventService
-import com.example.planner.dialogs.CreateTaskDialog
-import com.example.planner.dialogs.RemoveTaskDialog
-import java.sql.Time
+import com.example.planner.todo.dialogs.CreateTaskDialog
+import com.example.planner.todo.dialogs.RemoveTaskDialog
 import com.example.planner.gestures.BaseSwipeToDismissActivity
-import kotlinx.android.synthetic.main.menu.*
 
 @Suppress("DEPRECATION")
 class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
@@ -139,8 +137,17 @@ class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
         // Получить из базы данных список дел на день, выполнить сортировку
         addedTasks = ArrayList()
 
+        var dbLocked = true
         val connection = DatabaseWorker()
-        connection.setConnection(this)
+        while (dbLocked) {
+            try {
+                connection.setConnection(this)
+                dbLocked = false
+            } catch (e: SQLiteDatabaseLockedException) {
+                Thread.sleep(10)
+                println("SLEEPING")
+            }
+        }
         val eventService = EventService()
 
         println("GETTING ALL EVENTS FOR TODAY")
@@ -156,6 +163,9 @@ class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
         if (events.size == 0) {
             llMain.removeAllViews()
         }
+
+        connection.closeConnection()
+        connection.getmDb().close()
     }
 
     inner class TimeThread : Thread() {

@@ -10,6 +10,7 @@ import androidx.core.view.GestureDetectorCompat
 import com.example.planner.gestures.DetectSwipeGesturesListener
 import java.util.concurrent.TimeUnit
 import androidx.work.*
+import com.example.planner.todo.ToDoActivity
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var gestureDetector : GestureDetectorCompat
@@ -36,7 +37,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         btnToCalendar.setOnClickListener {view -> onClick(view)}
         btnToStatistics.setOnClickListener {view -> onClick(view)}
 
-        val gestureListener = DetectSwipeGesturesListener(this, ToDoActivity(), StatisticsActivity())
+        val gestureListener = DetectSwipeGesturesListener(this,
+            ToDoActivity(), StatisticsActivity())
         gestureDetector = GestureDetectorCompat(this, gestureListener)
     }
 

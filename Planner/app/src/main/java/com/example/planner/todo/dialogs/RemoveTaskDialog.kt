@@ -1,6 +1,7 @@
-package com.example.planner.dialogs
+package com.example.planner.todo.dialogs
 
 import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteDatabaseLockedException
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -14,8 +15,8 @@ import androidx.core.view.setPadding
 import androidx.fragment.app.DialogFragment
 import com.example.planner.DatabaseWorker
 import com.example.planner.R
-import com.example.planner.Task
-import com.example.planner.ToDoActivity
+import com.example.planner.todo.Task
+import com.example.planner.todo.ToDoActivity
 import com.example.planner.db.Event
 import com.example.planner.db.EventService
 
@@ -106,8 +107,16 @@ class RemoveTaskDialog(private val tasks : ArrayList<Task>, private val activity
     }
 
     private fun removeFromDataBase() {
+        var dbLocked = true
         val connection = DatabaseWorker()
-        connection.setConnection(activity)
+        while (dbLocked) {
+            try {
+                connection.setConnection(activity)
+                dbLocked = false
+            } catch (e: SQLiteDatabaseLockedException) {
+                Thread.sleep(10)
+            }
+        }
 
         val eventService = EventService()
         val dataBase = connection.getmDb()
@@ -118,6 +127,9 @@ class RemoveTaskDialog(private val tasks : ArrayList<Task>, private val activity
                 eventService.deleteEvent(event, dataBase)
             }
         }
+
+        connection.closeConnection()
+        connection.getmDb().close()
     }
 
     private fun getAllEvents(dataBase : SQLiteDatabase, eventName : String) : MutableList<Event> {

@@ -96,7 +96,7 @@ class JournalEntryService {
                 cursor.moveToNext()
             }
         println(count)
-            cursor.close()
+        cursor.close()
         /*} catch (e : Exception) {
             println("Table is empty")
         }*/

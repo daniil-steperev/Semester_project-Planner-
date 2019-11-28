@@ -1,8 +1,7 @@
-package com.example.planner
+package com.example.planner.todo
 
 import com.example.planner.db.Event
 import com.example.planner.db.TriggerRule
-import java.lang.StringBuilder
 import java.sql.Time
 import java.util.*
 
