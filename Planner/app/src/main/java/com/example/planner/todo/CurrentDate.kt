@@ -1,7 +1,6 @@
-package com.example.planner
+package com.example.planner.todo
 
 import android.widget.TextView
-import com.example.planner.ToDoActivity.TimeThread
 import java.text.SimpleDateFormat
 import java.util.*
 

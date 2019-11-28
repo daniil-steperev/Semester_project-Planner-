@@ -1,6 +1,7 @@
-package com.example.planner.dialogs
+package com.example.planner.todo.dialogs
 
 import android.content.Context
+import android.database.sqlite.SQLiteDatabaseLockedException
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +13,8 @@ import android.widget.TimePicker
 import androidx.fragment.app.DialogFragment
 import com.example.planner.DatabaseWorker
 import com.example.planner.R
-import com.example.planner.Task
-import com.example.planner.ToDoActivity
+import com.example.planner.todo.Task
+import com.example.planner.todo.ToDoActivity
 import com.example.planner.db.Event
 import com.example.planner.db.EventService
 import com.example.planner.db.TriggerRule
@@ -54,6 +55,7 @@ class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(
         savedInstanceState: Bundle?
     ): View? {
         isReady = false
+        println("CREATEING VIEW")
 
         val view = inflater.inflate(R.layout.create_task, null)
 
@@ -136,8 +138,16 @@ class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(
 
     /** A method that adds Event to database. */
     private fun addToDataBase(hour : Int, minute : Int) {
+        var dbLocked = true
         val connection = DatabaseWorker()
-        connection.setConnection(activityContext)
+        while (dbLocked) {
+            try {
+                connection.setConnection(activityContext)
+                dbLocked = false
+            } catch (e: SQLiteDatabaseLockedException) {
+                Thread.sleep(10)
+            }
+        }
 
         val calendar = GregorianCalendar()
         calendar.timeInMillis = System.currentTimeMillis()
@@ -155,5 +165,8 @@ class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(
         val eventService = EventService()
 
         eventService.addEvent(newEvent, connection.getmDb(), activeTriggers)
+
+        connection.closeConnection()
+        connection.getmDb().close()
     }
 }
