@@ -11,15 +11,6 @@ class JournalEntryService {
 
     private var lastEntryDate : Long = 0
 
-    /*constructor (lastDate : Long) {
-        println("WE ARE IN CONSRTRUCTOR")
-        if (lastDate == 0.toLong()) {
-            println("COMPUTATEINITDATE")
-            lastEntryDate = computateInitDate()
-            println("NOW DATE IS" + lastEntryDate)
-        }
-    }*/
-
     fun computateInitDate() : Long {
         var minDate= Calendar.getInstance()
         minDate.add(Calendar.YEAR, -1)
@@ -56,15 +47,19 @@ class JournalEntryService {
                 val query1 = "INSERT INTO event_journal (name, time, description, successful) " +
                         "VALUES(\"${i.getName()}\", $lastEntryDate, \"${i.getDescription()}\", 1); "
                 mDb.beginTransaction()
-                mDb.execSQL(query1)
-                mDb.setTransactionSuccessful()
-                mDb.endTransaction()
+                try {
+                    mDb.execSQL(query1)
+                    mDb.setTransactionSuccessful()
+                    mDb.endTransaction()
+                } finally {
+                    mDb.endTransaction()
+                }
             }
             lastEntryDate += 86400000
             println("HAHA")
         }
 
-        val cursorDebug2 = mDb.rawQuery("SELECT * FROM event_journal", null)
+        /*val cursorDebug2 = mDb.rawQuery("SELECT * FROM event_journal", null)
         cursorDebug2.moveToFirst()
         var count : Long = 0
         while (!cursorDebug2.isAfterLast) {
@@ -79,7 +74,7 @@ class JournalEntryService {
         cursorDebug2.close()
         println("LAST ENTRY DATE")
         // FIXME СКАЗАТЬ ДАНЕ, ЧТОБЫ ОН ВСЕГДА ИНИЦИАЛИЗИРОВАЛ ВРЕМЯ КОНЦА СОБЫТИЯ, ДАЖЕ ЕСЛИ ОНО НЕ УКАЗАНО
-        // FIXME SUCCESSFUL MUST BE NOT NULL
+        // FIXME SUCCESSFUL MUST BE NOT NULL*/
     }
 
     fun getEntriesForGivenPeriodOfTime(start : Long, end : Long, mDb : SQLiteDatabase) : MutableList<JournalEntry> {
