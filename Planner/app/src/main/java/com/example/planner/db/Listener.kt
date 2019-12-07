@@ -25,11 +25,9 @@ class Listener {
                 }
 
                 mDb.setTransactionSuccessful()
-                mDb.endTransaction()
             } finally {
                 mDb.endTransaction()
             }
-
             cursor.close()
         } finally {
             cursor.close()

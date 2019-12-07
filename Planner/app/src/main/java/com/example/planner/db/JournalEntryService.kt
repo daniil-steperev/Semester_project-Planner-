@@ -50,7 +50,6 @@ class JournalEntryService {
                 try {
                     mDb.execSQL(query1)
                     mDb.setTransactionSuccessful()
-                    mDb.endTransaction()
                 } finally {
                     mDb.endTransaction()
                 }
@@ -79,19 +78,20 @@ class JournalEntryService {
 
     fun getEntriesForGivenPeriodOfTime(start : Long, end : Long, mDb : SQLiteDatabase) : MutableList<JournalEntry> {
         var entries : MutableList<JournalEntry> = LinkedList()
-        //try {
-            val cursor = mDb.rawQuery(
+        val cursor = mDb.rawQuery(
                 "SELECT * FROM event_journal WHERE (time > $start AND time < $end);",
                 null)
+        cursor.use { cursor ->
             cursor.moveToFirst()
-        var count : Long = 0
+            var count: Long = 0
             while (!cursor.isAfterLast) {
                 entries.add(mapEntry(cursor, mDb))
                 count++
                 cursor.moveToNext()
             }
-        println(count)
-        cursor.close()
+            println(count)
+            cursor.close()
+        }
         /*} catch (e : Exception) {
             println("Table is empty")
         }*/

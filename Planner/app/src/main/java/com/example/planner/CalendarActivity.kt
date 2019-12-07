@@ -3,7 +3,6 @@ package com.example.planner
 import android.database.sqlite.SQLiteDatabaseLockedException
 import android.os.AsyncTask
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.example.planner.calendar.MyCalendarEvent
 import com.example.planner.calendar.SampleEvent
 import com.example.planner.calendar.SampleEventAgendaAdapter
@@ -19,7 +18,6 @@ import com.ognev.kotlin.agendacalendarview.models.IDayItem
 import kotlinx.android.synthetic.main.activity_calendar.*
 
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
@@ -75,25 +73,6 @@ class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
             }
         }
 
-        println("Connected to the db")
-
-        var event = Event()
-        event.setName("English")
-        event.setDescription("Problem-solution essay")
-        event.setTime(1573145514481)
-
-        var chosenTriggers: MutableList<TriggerRule> = LinkedList()
-        chosenTriggers.add(TriggerRule.THURSDAY)
-        connection.addEvent(event, chosenTriggers)
-
-        var event1 = Event()
-        event1.setName("walking")
-        event1.setDescription("in the forest")
-        event1.setTime(1573126512000)
-        connection.deleteEvent(event1)
-
-        println("removed added events")
-
         var currentTime = System.currentTimeMillis()
         val passedEvents = connection.getEntriesForGivenPeriodOfTime(minDate.timeInMillis, System.currentTimeMillis())
 
@@ -119,7 +98,6 @@ class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
         currentTime += 86400000
         while (currentTime < maxDate.timeInMillis) {
             var list : List<Event> =  connection.readEventsForToday(currentTime)
-            val day = Calendar.getInstance()
             for (i in list) {
                 val day = Calendar.getInstance(Locale.ENGLISH)
                 if (i.getTime() <= currentTime) {
@@ -143,8 +121,6 @@ class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
 
 
         connection.closeConnection()
-        connection.getmDb().close()
-
         contentManager.loadItemsFromStart(eventList)
     }
 

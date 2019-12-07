@@ -42,7 +42,6 @@ class EventTimer(appContext: Context, workerParams: WorkerParameters)
 
         connection.addEventsToJournal()
         connection.closeConnection()
-        connection.getmDb().close()
 
         println("doWork: end")
 

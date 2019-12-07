@@ -165,7 +165,6 @@ class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
         }
 
         connection.closeConnection()
-        connection.getmDb().close()
     }
 
     inner class TimeThread : Thread() {

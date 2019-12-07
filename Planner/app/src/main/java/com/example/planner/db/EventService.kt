@@ -8,10 +8,10 @@ import java.util.*
 class EventService {
 
     fun addEvent(e: Event, mDb: SQLiteDatabase, triggers: MutableList<TriggerRule>) {
-        try {
-            val query1 = "INSERT INTO event (name) VALUES(\"${e.getName()}\"); "
+        val query1 = "INSERT INTO event (name) VALUES(\"${e.getName()}\"); "
 
-            mDb.beginTransaction()
+        mDb.beginTransaction()
+        try {
             mDb.execSQL(query1)
 
             val cursor = mDb.rawQuery("SELECT * FROM event WHERE name = \"${e.getName()}\"", null)
@@ -28,17 +28,15 @@ class EventService {
             mDb.execSQL(query2)
 
             mDb.setTransactionSuccessful()
-            mDb.endTransaction()
-
-            val listener = Listener()
-            listener.addEvent(mDb, e, triggers)
-
         } catch (e : android.database.sqlite.SQLiteConstraintException) {
             println("Such event already exists")
-            mDb.endTransaction()
         } finally {
             mDb.endTransaction()
         }
+
+        val listener = Listener()
+        listener.addEvent(mDb, e, triggers)
+
     }
 
     fun getAllEventsForToday(mDb : SQLiteDatabase, originalCalendar : Calendar) : MutableList<Event> {
@@ -94,8 +92,8 @@ class EventService {
     }
 
     fun deleteEvent(e: Event, mDb: SQLiteDatabase) {
+        mDb.beginTransaction()
         try {
-            mDb.beginTransaction()
             val cursor1 = mDb.rawQuery("SELECT * FROM event WHERE name = \"${e.getName()}\"; ", null)
             cursor1.use { cursor1 ->
                 cursor1.moveToFirst()
@@ -124,7 +122,6 @@ class EventService {
             }
 
             mDb.setTransactionSuccessful()
-            mDb.endTransaction()
         } catch (e : Exception) {
             println("Such object does not exist")
         } finally {
@@ -143,7 +140,6 @@ class EventService {
                     val cursor2 = mDb.rawQuery("SELECT * FROM event WHERE id = $event_id", null)
                     cursor2.use { cursor2 ->
                         cursor2.moveToFirst()
-                        var event: Event = mapEvent(cursor2, mDb)
                         events.add(mapEvent(cursor2, mDb))
                         cursor1.moveToNext()
                         cursor2.close()
@@ -164,7 +160,7 @@ class EventService {
         val query : String = "SELECT * FROM event_param WHERE event_id = ${e.getID()}; "
 
         var cursorInEventParam = mDb.rawQuery(query, null)
-        cursor.use {
+        cursorInEventParam.use {
             cursorInEventParam.moveToFirst()
 
             e.setDescription(cursorInEventParam.getString(cursorInEventParam.getColumnIndex("description")))
