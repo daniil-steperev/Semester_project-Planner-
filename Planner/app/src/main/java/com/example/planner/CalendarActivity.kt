@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_calendar.*
 
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.time.hours
 
 class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
 
@@ -76,9 +77,11 @@ class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
         var currentTime = System.currentTimeMillis()
         val passedEvents = connection.getEntriesForGivenPeriodOfTime(minDate.timeInMillis, System.currentTimeMillis())
 
+        var counter : Int = passedEvents.size
+
         println("In cycle in journal")
         for (i in passedEvents) {
-            val day = Calendar.getInstance(Locale.ENGLISH)
+            val day = Calendar.getInstance()
             day.timeInMillis = i.getTime()
             eventList.add(
                 MyCalendarEvent(
@@ -88,20 +91,23 @@ class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
                     SampleEvent(
                         0,
                         name = i.getName(),
-                        description = i.getDescription()
+                        description = i.getDescription(),
+                        time = currentTime
                     )
-                ).setEventInstanceDay(day)
+                )
             )
         }
 
         println("In cycle in future")
         currentTime += 86400000
+        println("maxDate" + maxDate.timeInMillis)
         while (currentTime < maxDate.timeInMillis) {
+            counter++
             var list : List<Event> =  connection.readEventsForToday(currentTime)
             for (i in list) {
                 val day = Calendar.getInstance(Locale.ENGLISH)
+                day.timeInMillis = i.getTime() + counter * 86400000
                 if (i.getTime() <= currentTime) {
-                    day.timeInMillis = currentTime
                     eventList.add(
                         MyCalendarEvent(
                             day,
@@ -110,9 +116,10 @@ class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
                             SampleEvent(
                                 0,
                                 name = i.getName(),
-                                description = i.getDescription()
+                                description = i.getDescription(),
+                                time = i.getTime() + counter * 86400000
                             )
-                        ).setEventInstanceDay(day)
+                        )
                     )
                 }
             }

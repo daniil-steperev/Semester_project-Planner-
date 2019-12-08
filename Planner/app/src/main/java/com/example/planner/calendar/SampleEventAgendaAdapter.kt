@@ -40,14 +40,32 @@ class SampleEventAgendaAdapter(private var context: Context) : DefaultEventAdapt
 
     override fun getEventItemView(view: View, event: CalendarEvent, position: Int) {
         val myEvent = event as MyCalendarEvent
-        val myObject: SampleEvent? = myEvent.event as SampleEvent?
+        val myObject: SampleEvent = myEvent.event as SampleEvent
+        val date : Date = Date(myObject.time)
 
         if (myEvent.hasEvent()) {
             val name = view.findViewById(R.id.name) as TextView
             val description = view.findViewById(R.id.description) as TextView
+            val time = view.findViewById(R.id.time) as TextView
 
             name.text = myObject?.name
             description.text = myObject?.description
+
+            var hours = ""
+            if (date.hours < 10) {
+                 hours = "0" + date.hours.toString()
+            } else {
+                hours = date.hours.toString()
+            }
+
+            var minutes = ""
+            if (date.minutes < 10) {
+                minutes = "0" + date.minutes.toString()
+            } else {
+                minutes = date.minutes.toString()
+            }
+
+            time.text = hours + ":" + minutes
         }
 
         view.setOnClickListener {

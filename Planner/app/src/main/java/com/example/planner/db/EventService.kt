@@ -39,58 +39,6 @@ class EventService {
 
     }
 
-    fun getAllEventsForToday(mDb : SQLiteDatabase, originalCalendar : Calendar) : MutableList<Event> {
-        val calendar = GregorianCalendar()
-        calendar.timeInMillis = originalCalendar.timeInMillis
-
-        calendar.set(Calendar.HOUR_OF_DAY, 0)
-        calendar.set(Calendar.MINUTE, 0)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
-
-        val startTime = calendar.timeInMillis
-
-        calendar.set(Calendar.HOUR_OF_DAY, 23)
-        calendar.set(Calendar.MINUTE, 59)
-        calendar.set(Calendar.SECOND, 59)
-        calendar.set(Calendar.MILLISECOND, 59)
-
-        val endTime = calendar.timeInMillis
-
-        var events = mutableListOf<Event>()
-
-        val queryEventId = "SELECT * FROM event_param WHERE (time > $startTime) AND (time < $endTime)"
-        val cursor = mDb.rawQuery(queryEventId, null)
-
-        cursor.use { cursor ->
-            cursor.moveToFirst()
-            while (!cursor.isAfterLast) {
-                val event = Event()
-
-                event.setTime(cursor.getLong(cursor.getColumnIndex("time")))
-                event.setDescription(cursor.getString(cursor.getColumnIndex("description")))
-                event.setID(cursor.getLong(cursor.getColumnIndex("event_id")))
-
-                val eventId = cursor.getLong(cursor.getColumnIndex("event_id"))
-                val queryEvent = "SELECT * FROM event WHERE id = $eventId"
-
-                val eventCursor = mDb.rawQuery(queryEvent, null)
-                eventCursor.use { eventCursor ->
-                    eventCursor.moveToFirst()
-                    event.setName(eventCursor.getString(eventCursor.getColumnIndex("name")))
-                    events.add(event)
-
-                    eventCursor.close()
-                }
-                cursor.moveToNext()
-            }
-
-            cursor.close()
-        }
-
-        return events
-    }
-
     fun deleteEvent(e: Event, mDb: SQLiteDatabase) {
         mDb.beginTransaction()
         try {
