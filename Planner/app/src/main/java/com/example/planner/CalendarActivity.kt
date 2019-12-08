@@ -3,7 +3,6 @@ package com.example.planner
 import android.database.sqlite.SQLiteDatabaseLockedException
 import android.os.AsyncTask
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.example.planner.calendar.MyCalendarEvent
 import com.example.planner.calendar.SampleEvent
 import com.example.planner.calendar.SampleEventAgendaAdapter
@@ -19,7 +18,6 @@ import com.ognev.kotlin.agendacalendarview.models.IDayItem
 import kotlinx.android.synthetic.main.activity_calendar.*
 
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
@@ -75,32 +73,15 @@ class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
             }
         }
 
-        println("Connected to the db")
-
-        var event = Event()
-        event.setName("English")
-        event.setDescription("Problem-solution essay")
-        event.setTime(1573145514481)
-
-        var chosenTriggers: MutableList<TriggerRule> = LinkedList()
-        chosenTriggers.add(TriggerRule.THURSDAY)
-        connection.addEvent(event, chosenTriggers)
-
-        var event1 = Event()
-        event1.setName("walking")
-        event1.setDescription("in the forest")
-        event1.setTime(1573126512000)
-        connection.deleteEvent(event1)
-
-        println("removed added events")
-
         var currentTime = System.currentTimeMillis()
         val passedEvents = connection.getEntriesForGivenPeriodOfTime(minDate.timeInMillis, System.currentTimeMillis())
 
         println("In cycle in journal")
+        println("Journal size" + passedEvents.size)
         for (i in passedEvents) {
             val day = Calendar.getInstance(Locale.ENGLISH)
             day.timeInMillis = i.getTime()
+            println("time is" + i.getTime())
             eventList.add(
                 MyCalendarEvent(
                     day,
@@ -109,14 +90,15 @@ class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
                     SampleEvent(
                         0,
                         name = i.getName(),
-                        description = i.getDescription()
+                        description = i.getDescription(),
+                        time = i.getTime()
                     )
-                ).setEventInstanceDay(day)
+                )
             )
         }
 
         println("In cycle in future")
-        currentTime += 86400000
+
         while (currentTime < maxDate.timeInMillis) {
             var list : List<Event> =  connection.readEventsForToday(currentTime)
             val day = Calendar.getInstance()
@@ -124,6 +106,18 @@ class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
                 val day = Calendar.getInstance(Locale.ENGLISH)
                 if (i.getTime() <= currentTime) {
                     day.timeInMillis = currentTime
+
+                    var currentDate : Date = Date(currentTime)
+                    var originalDate : Date = Date(i.getTime())
+                    var finalDate : Date = Date()
+                    finalDate.year = currentDate.year
+                    finalDate.month = currentDate.month
+                    finalDate.date = currentDate.date
+                    finalDate.minutes = originalDate.minutes
+                    finalDate.hours = originalDate.hours
+
+                    var shift : Calendar = Calendar.getInstance()
+                    shift.setTime(finalDate)
                     eventList.add(
                         MyCalendarEvent(
                             day,
@@ -132,7 +126,8 @@ class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
                             SampleEvent(
                                 0,
                                 name = i.getName(),
-                                description = i.getDescription()
+                                description = i.getDescription(),
+                                time = shift.timeInMillis
                             )
                         ).setEventInstanceDay(day)
                     )
@@ -142,9 +137,8 @@ class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
         }
 
 
-        connection.closeConnection()
-        connection.getmDb().close()
 
+        connection.closeConnection()
         contentManager.loadItemsFromStart(eventList)
     }
 

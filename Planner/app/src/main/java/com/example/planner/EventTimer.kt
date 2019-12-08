@@ -30,19 +30,8 @@ class EventTimer(appContext: Context, workerParams: WorkerParameters)
             }
         }
 
-        var event = Event()
-        var time = System.currentTimeMillis()
-        event.setName("Alloha! + $time ")
-        event.setDescription("Dance!!!")
-        event.setTime(System.currentTimeMillis())
-
-        var chosenTriggers: MutableList<TriggerRule> = mutableListOf()
-        chosenTriggers.add(TriggerRule.WEDNESDAY)
-        connection.addEvent(event, chosenTriggers)
-
         connection.addEventsToJournal()
         connection.closeConnection()
-        connection.getmDb().close()
 
         println("doWork: end")
 

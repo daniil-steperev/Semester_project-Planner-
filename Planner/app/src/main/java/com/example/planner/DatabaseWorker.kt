@@ -21,10 +21,6 @@ class DatabaseWorker {
     private lateinit var context : Context
     private val FILE_NAME = "config.txt"
 
-    /*constructor(initTime : Long) {
-        journalEntryService = JournalEntryService(initTime)
-    }*/
-
     fun setConnection(newContext : Context) {
         context = newContext
         mDBHelper = DatabaseHelper(newContext)

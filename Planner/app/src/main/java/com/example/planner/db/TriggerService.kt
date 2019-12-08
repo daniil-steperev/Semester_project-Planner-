@@ -8,18 +8,20 @@ class TriggerService {
         val cursor = mDb.rawQuery("SELECT * FROM triggerTable", null)
         val triggerList = mutableListOf<Trigger>()
 
-        cursor.moveToFirst()
-        while (!cursor.isAfterLast) {
-            val newTrigger = map(cursor)
+        cursor.use { cursor ->
+            cursor.moveToFirst()
+            while (!cursor.isAfterLast) {
+                val newTrigger = map(cursor)
 
-            if (newTrigger.suits(date)) {
-                triggerList.add(newTrigger)
+                if (newTrigger.suits(date)) {
+                    triggerList.add(newTrigger)
+                }
+
+                cursor.moveToNext()
             }
 
-            cursor.moveToNext()
+            cursor.close()
         }
-
-        cursor.close()
         return triggerList
     }
 

@@ -86,6 +86,7 @@ class DatabaseHelper(private val mContext: Context) :
         if (mDataBase != null)
             mDataBase!!.close()
         super.close()
+        println("CONNECTION CLOSED")
     }
 
     override fun onCreate(db: SQLiteDatabase) {

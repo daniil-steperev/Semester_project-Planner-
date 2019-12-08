@@ -151,7 +151,7 @@ class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
         val eventService = EventService()
 
         println("GETTING ALL EVENTS FOR TODAY")
-        val events = eventService.getAllEventsForToday(connection.getmDb(), currentDate.calendar)
+        val events = connection.readEventsForToday(currentDate.calendar.timeInMillis)
         for (event in events) {
             println("ADDING NEW EVENT")
             val newTask = Task()
@@ -165,7 +165,6 @@ class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
         }
 
         connection.closeConnection()
-        connection.getmDb().close()
     }
 
     inner class TimeThread : Thread() {
