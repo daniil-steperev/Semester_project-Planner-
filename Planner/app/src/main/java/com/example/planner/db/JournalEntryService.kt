@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import androidx.core.graphics.toColorLong
+import kotlinx.coroutines.processNextEventInCurrentThread
 import java.util.*
 
 class JournalEntryService {
@@ -39,13 +40,25 @@ class JournalEntryService {
         var currentTime = System.currentTimeMillis()
 
         println("dates now is " + lastEntryDate + " " + currentTime)
-        //var eventsToAdd  = eventService.returnAllEventsInGivenPeriodOfTime(lastEntryDate, currentTime, mDb)
+
         while (lastEntryDate < currentTime) {
             var triggers : MutableList<Trigger> = triggerService.readTrigger(mDb, lastEntryDate)
             var list : List<Event> =  eventService.readEvent(triggers, mDb)
             for (i in list) {
+
+                var lastEntryDate : Date = Date(lastEntryDate)
+                var originalDate : Date = Date(i.getTime())
+                var finalDate : Date = Date()
+                finalDate.year = lastEntryDate.year
+                finalDate.month = lastEntryDate.month
+                finalDate.date = lastEntryDate.date
+                finalDate.minutes = originalDate.minutes
+                finalDate.hours = originalDate.hours
+
+                var shift = Calendar.getInstance()
+                shift.setTime(finalDate)
                 val query1 = "INSERT INTO event_journal (name, time, description, successful) " +
-                        "VALUES(\"${i.getName()}\", $lastEntryDate, \"${i.getDescription()}\", 1); "
+                        "VALUES(\"${i.getName()}\", \"${shift.timeInMillis}\", \"${i.getDescription()}\", 1); "
                 mDb.beginTransaction()
                 try {
                     mDb.execSQL(query1)
@@ -55,25 +68,7 @@ class JournalEntryService {
                 }
             }
             lastEntryDate += 86400000
-            println("HAHA")
         }
-
-        /*val cursorDebug2 = mDb.rawQuery("SELECT * FROM event_journal", null)
-        cursorDebug2.moveToFirst()
-        var count : Long = 0
-        while (!cursorDebug2.isAfterLast) {
-            println(cursorDebug2.getString(cursorDebug2.getColumnIndex("id"))
-                    + " " + cursorDebug2.getString(cursorDebug2.getColumnIndex("description")) + " "
-                    + cursorDebug2.getLong(cursorDebug2.getColumnIndex("time"))
-                    + " " + cursorDebug2.getLong(cursorDebug2.getColumnIndex("name")))
-            count++
-            cursorDebug2.moveToNext()
-        }
-        println("HOW MANY IN EVENT JOURNAL " + count)
-        cursorDebug2.close()
-        println("LAST ENTRY DATE")
-        // FIXME СКАЗАТЬ ДАНЕ, ЧТОБЫ ОН ВСЕГДА ИНИЦИАЛИЗИРОВАЛ ВРЕМЯ КОНЦА СОБЫТИЯ, ДАЖЕ ЕСЛИ ОНО НЕ УКАЗАНО
-        // FIXME SUCCESSFUL MUST BE NOT NULL*/
     }
 
     fun getEntriesForGivenPeriodOfTime(start : Long, end : Long, mDb : SQLiteDatabase) : MutableList<JournalEntry> {
@@ -92,9 +87,6 @@ class JournalEntryService {
             println(count)
             cursor.close()
         }
-        /*} catch (e : Exception) {
-            println("Table is empty")
-        }*/
         return entries
     }
 

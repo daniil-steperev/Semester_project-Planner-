@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.activity_calendar.*
 
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.time.hours
 
 class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
 
@@ -77,12 +76,12 @@ class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
         var currentTime = System.currentTimeMillis()
         val passedEvents = connection.getEntriesForGivenPeriodOfTime(minDate.timeInMillis, System.currentTimeMillis())
 
-        var counter : Int = passedEvents.size
-
         println("In cycle in journal")
+        println("Journal size" + passedEvents.size)
         for (i in passedEvents) {
-            val day = Calendar.getInstance()
+            val day = Calendar.getInstance(Locale.ENGLISH)
             day.timeInMillis = i.getTime()
+            println("time is" + i.getTime())
             eventList.add(
                 MyCalendarEvent(
                     day,
@@ -92,22 +91,33 @@ class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
                         0,
                         name = i.getName(),
                         description = i.getDescription(),
-                        time = currentTime
+                        time = i.getTime()
                     )
                 )
             )
         }
 
         println("In cycle in future")
-        currentTime += 86400000
-        println("maxDate" + maxDate.timeInMillis)
+
         while (currentTime < maxDate.timeInMillis) {
-            counter++
             var list : List<Event> =  connection.readEventsForToday(currentTime)
+            val day = Calendar.getInstance()
             for (i in list) {
                 val day = Calendar.getInstance(Locale.ENGLISH)
-                day.timeInMillis = i.getTime() + counter * 86400000
                 if (i.getTime() <= currentTime) {
+                    day.timeInMillis = currentTime
+
+                    var currentDate : Date = Date(currentTime)
+                    var originalDate : Date = Date(i.getTime())
+                    var finalDate : Date = Date()
+                    finalDate.year = currentDate.year
+                    finalDate.month = currentDate.month
+                    finalDate.date = currentDate.date
+                    finalDate.minutes = originalDate.minutes
+                    finalDate.hours = originalDate.hours
+
+                    var shift : Calendar = Calendar.getInstance()
+                    shift.setTime(finalDate)
                     eventList.add(
                         MyCalendarEvent(
                             day,
@@ -117,14 +127,15 @@ class CalendarActivity : BaseSwipeToDismissActivity(), CalendarController {
                                 0,
                                 name = i.getName(),
                                 description = i.getDescription(),
-                                time = i.getTime() + counter * 86400000
+                                time = shift.timeInMillis
                             )
-                        )
+                        ).setEventInstanceDay(day)
                     )
                 }
             }
             currentTime += 86400000
         }
+
 
 
         connection.closeConnection()
