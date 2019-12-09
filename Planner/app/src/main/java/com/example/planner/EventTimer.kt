@@ -38,7 +38,7 @@ class EventTimer(appContext: Context, workerParams: WorkerParameters)
 
         var chosenTriggers: MutableList<TriggerRule> = mutableListOf()
         chosenTriggers.add(TriggerRule.WEDNESDAY)
-        connection.addEvent(event, chosenTriggers)
+        //connection.addEvent(event, chosenTriggers)
 
         connection.addEventsToJournal()
         connection.closeConnection()

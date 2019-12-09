@@ -165,6 +165,10 @@ class CreateTaskDialog(private val toDoActivity: ToDoActivity) : DialogFragment(
         val eventService = EventService()
 
         eventService.addEvent(newEvent, connection.getmDb(), activeTriggers)
+        println("ACTIVE TRIGGERS FOR ${newEvent.getName()}")
+        for (trigger in activeTriggers) {
+            println(trigger.toString())
+        }
 
         connection.closeConnection()
         connection.getmDb().close()

@@ -1,10 +1,7 @@
 package com.example.planner.db
 
-import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import androidx.core.graphics.toColorLong
 import java.util.*
 
 class JournalEntryService {
