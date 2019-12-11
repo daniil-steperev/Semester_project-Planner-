@@ -173,6 +173,7 @@
         android:layout_height="wrap_content"
         android:text="@string/create_task_button"
         android:layout_gravity="center"
+        android:background="@drawable/menu_button"
         android:onClick="onClick">
     </Button>
 </LinearLayout>

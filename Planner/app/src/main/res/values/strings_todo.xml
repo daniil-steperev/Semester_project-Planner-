@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="page_name">Мои планы</string>
+    <string name="page_name">My plans</string>
     <string name="day_todo">0</string>
     <string name="month_todo">Январь</string>
     <string name="day_of_week_todo">Понедельник</string>

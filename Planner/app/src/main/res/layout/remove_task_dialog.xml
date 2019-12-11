@@ -27,7 +27,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/remove"
-                android:id="@+id/remove_button">
+                android:id="@+id/remove_button"
+                android:background="@drawable/menu_button">
             </Button>
 
         </LinearLayout>

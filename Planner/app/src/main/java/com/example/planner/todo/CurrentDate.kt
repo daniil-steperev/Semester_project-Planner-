@@ -1,5 +1,6 @@
 package com.example.planner.todo
 
+import android.graphics.Color
 import android.widget.TextView
 import java.text.SimpleDateFormat
 import java.util.*
@@ -16,14 +17,17 @@ class CurrentDate(
     fun updateDate() {
         calendar = GregorianCalendar()
         calendar.timeInMillis = System.currentTimeMillis()
-        //calendar.set(Calendar.HOUR_OF_DAY, 24)
 
         day.text = calendar.get(Calendar.DAY_OF_MONTH).toString()
+        day.setTextColor(Color.BLACK)
         month.text = getMonth(calendar.get(Calendar.MONTH))
+        month.setTextColor(Color.BLACK)
         dayOfWeek.text = getDayOfWeek(calendar.get(Calendar.DAY_OF_WEEK))
+        dayOfWeek.setTextColor(Color.BLACK)
 
         val timeFormat = SimpleDateFormat("HH:mm", Locale.ENGLISH)
         time.text = timeFormat.format(calendar.time)
+        time.setTextColor(Color.BLACK)
     }
 
     private fun getDayOfWeek(dayInt : Int) : String {

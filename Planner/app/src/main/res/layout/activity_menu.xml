@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     tools:context=".MenuActivity"
     android:layout_gravity="center"
-    android:background="@drawable/background_for_menu0"
+    android:background="@color/white"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -17,7 +17,7 @@
         android:layout_height = "70dp"
         android:text = "@string/super_planner"
         android:textAllCaps = "false"
-        android:textColor = "#5A5757"
+        android:textColor = "@color/black"
         android:textSize = "24sp"
         android:gravity = "center"
         android:textStyle = "italic"

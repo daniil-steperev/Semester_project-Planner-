@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".StatisticsActivity"
-    android:background="@drawable/background1">
+    android:background="@color/white">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -22,16 +22,15 @@
                 android:layout_height="wrap_content"
                 android:text="@string/statistics"
                 android:textSize="50dp"
-                android:textColor="#515c5e"
-                android:background="#f3eab3"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
                 />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp"
+                android:padding="15dp"
                 android:background="@drawable/menu_button"
                 android:layout_marginTop="5dp">
 
@@ -41,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="@string/completed_jobs"
-                    android:textColor="#515c5e"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
 
                 <TextView
@@ -55,7 +54,7 @@
                     android:padding="5dp"
                     android:text="@string/completed_jobs_quantty"
                     android:textSize="20sp"
-                    android:textColor="#515c5e"
+                    android:textColor="@color/black"
                     android:layout_toEndOf="@id/completed_jobs" />
             </RelativeLayout>
 
@@ -72,6 +71,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="@string/failed_jobs"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
 
                 <TextView
@@ -83,6 +83,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignTop="@id/failed_jobs"
                     android:padding="5dp"
+                    android:textColor="@color/black"
                     android:text="@string/failed_jobs_quantity"
                     android:textSize="20sp"
                     android:layout_toEndOf="@id/failed_jobs" />
@@ -100,6 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
+                    android:textColor="@color/black"
                     android:gravity="center"
                     android:text="@string/productivity"
                     android:textSize="20sp" />
@@ -112,6 +114,7 @@
                     android:layout_toRightOf="@id/productivity"
                     android:layout_alignTop="@id/productivity"
                     android:padding="5dp"
+                    android:textColor="@color/black"
                     android:text="@string/productivity_percent"
                     android:textSize="20sp"
 
@@ -133,7 +136,7 @@
                     android:gravity="center"
                     android:padding="20dp"
                     android:text="@string/current_week"
-                    android:textColor="#515c5e"
+                    android:textColor="@color/black"
                     android:textSize="20sp" />
 
                 <RelativeLayout
@@ -151,7 +154,7 @@
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:text="@string/completed_jobs_week"
-                        android:textColor="#515c5e"
+                        android:textColor="@color/black"
                         android:textSize="20sp" />
 
                     <TextView
@@ -165,7 +168,7 @@
                         android:layout_toRightOf="@id/completed_week_jobs"
                         android:padding="5dp"
                         android:text="@string/completed_wjobs_quantity"
-                        android:textColor="#515c5e"
+                        android:textColor="@color/black"
                         android:textSize="20sp" />
                 </RelativeLayout>
 
@@ -183,6 +186,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
+                        android:textColor="@color/black"
                         android:text="@string/failed_jobs_week"
                         android:textSize="20sp" />
 
@@ -196,6 +200,7 @@
                         android:layout_toEndOf="@id/failed_week_jobs"
                         android:layout_toRightOf="@id/failed_week_jobs"
                         android:padding="5dp"
+                        android:textColor="@color/black"
                         android:text="@string/failed_wjobs_quantity"
                         android:textSize="20sp" />
                 </RelativeLayout>
@@ -215,6 +220,7 @@
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:text="@string/left_jobs_week"
+                        android:textColor="@color/black"
                         android:textSize="20sp" />
 
                     <TextView
@@ -225,6 +231,7 @@
                         android:layout_alignParentRight="true"
                         android:layout_toEndOf="@id/left_week_jobs"
                         android:layout_toRightOf="@id/left_week_jobs"
+                        android:textColor="@color/black"
                         android:padding="5dp"
                         android:text="@string/left_wjobs_quantity"
                         android:textSize="20sp" />
@@ -236,8 +243,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp"
+                android:padding="15dp"
                 android:orientation="vertical"
                 android:background="@drawable/menu_button"
                 android:layout_marginTop="5dp">
@@ -247,6 +253,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
+                    android:textColor="@color/black"
                     android:text="@string/shock_days"
                     android:textSize="20sp" />
 
@@ -254,6 +261,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
+                    android:textColor="@color/black"
                     android:layout_toRightOf="@id/shock_days"
                     android:text="@string/shock_days_quantity"
                     android:textSize="20sp" />
@@ -263,8 +271,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp"
+                android:padding="15dp"
                 android:orientation="horizontal"
                 android:background="@drawable/menu_button"
                 android:layout_marginTop="5dp">
@@ -274,6 +281,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
+                    android:textColor="@color/black"
                     android:text="@string/status"
                     android:layout_gravity="center"
                     android:textSize="20sp" />
@@ -292,6 +300,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:padding="5dp"
+                            android:textColor="@color/black"
                             android:text="@string/current_status"
                             android:textSize="20sp" />
                     </LinearLayout>
@@ -301,8 +310,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp"
+                android:padding="15dp"
                 android:orientation="horizontal"
                 android:background="@drawable/menu_button"
                 android:layout_marginTop="5dp">
@@ -312,6 +320,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
+                    android:textColor="@color/black"
                     android:text="@string/next_status_name"
                     android:textSize="20sp" />
 
@@ -329,6 +338,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:padding="5dp"
+                            android:textColor="@color/black"
                             android:text="@string/next_status"
                             android:textSize="20sp" />
                     </LinearLayout>
@@ -339,8 +349,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp"
+                android:padding="15dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/menu_button">
 
@@ -349,12 +358,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
+                    android:textColor="@color/black"
                     android:text="@string/next_status_days_name"
                     android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/black"
                     android:layout_toEndOf="@id/days_for_next_status"
                     android:layout_toRightOf="@id/days_for_next_status"
                     android:layout_alignParentRight="true"

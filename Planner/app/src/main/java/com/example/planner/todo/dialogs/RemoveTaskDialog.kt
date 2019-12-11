@@ -2,6 +2,7 @@ package com.example.planner.todo.dialogs
 
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteDatabaseLockedException
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -67,31 +68,37 @@ class RemoveTaskDialog(private val tasks : ArrayList<Task>, private val activity
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
+        lParams.setMargins(10, 20, 10, 20)
+
         for (task in taskList) {
             val newLine = getNewCheckBoxLine(task)
+            newLine.setBackgroundResource(R.drawable.menu_button)
             window.addView(newLine, lParams)
         }
     }
 
     private fun getNewCheckBoxLine(task : Task) : LinearLayout {
-        val timeText = task.getTime()
+        val timeText = task.getTime().toString()
         val taskText = task.getTask()
         val checkBox = CheckBox(activity)
         checkBoxList.add(checkBox)
 
-        val newLine = LinearLayout(activity)
+        var newLine = LinearLayout(activity)
         newLine.orientation = LinearLayout.HORIZONTAL
 
         val time = TextView(activity)
         time.setPadding(5)
-        time.text = timeText.toString()
+        val timeWithoutSeconds = timeText.subSequence(0, timeText.lastIndexOf(':'))
+        time.text = timeWithoutSeconds
         time.textSize = 20.toFloat()
+        time.setTextColor(Color.BLACK)
 
         val task = TextView(activity)
         task.setPadding(5)
         task.gravity = Gravity.CENTER
         task.text = taskText
         task.textSize = 20.toFloat()
+        task.setTextColor(Color.BLACK)
 
         val timeLayoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
@@ -102,6 +109,8 @@ class RemoveTaskDialog(private val tasks : ArrayList<Task>, private val activity
         newLine.addView(checkBox, timeLayoutParams)
         newLine.addView(time, timeLayoutParams)
         newLine.addView(task, taskLayoutParams)
+
+        newLine.setPadding(5, 10, 5, 10)
 
         return newLine
     }

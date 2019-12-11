@@ -3,6 +3,7 @@ package com.example.planner.todo
 import android.annotation.SuppressLint
 import android.database.sqlite.SQLiteDatabaseLockedException
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.marginBottom
 import androidx.core.view.setPadding
 import com.example.planner.DatabaseWorker
 import com.example.planner.R
@@ -87,6 +89,8 @@ class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
+        lParams.setMargins(10, 20, 10, 20)
+
         addedTasks.add(newTask)
         addedTasks.sort() // sort tasks
 
@@ -94,6 +98,7 @@ class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
 
         for (task in addedTasks) { // add task in right order
             val newLine = getNewTaskLine(task)
+            newLine.setBackgroundResource(R.drawable.menu_button)
             llMain.addView(newLine, lParams)
         }
     }
@@ -111,12 +116,15 @@ class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
         val timeWithoutSeconds = timeValue.subSequence(0, timeValue.lastIndexOf(':'))
         time.text = timeWithoutSeconds
         time.textSize = 20.toFloat()
+        time.setPadding(10, 10, 10, 10)
+        time.setTextColor(Color.BLACK)
 
         val task = TextView(this)
         task.setPadding(5)
         task.gravity = Gravity.CENTER
         task.text = taskText
         task.textSize = 20.toFloat()
+        task.setTextColor(Color.BLACK)
 
         val timeLayoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
@@ -124,14 +132,14 @@ class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
         val taskLayoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT, 3f)
 
-        time.setBackgroundColor(Color.WHITE)
-        task.setBackgroundColor(Color.WHITE)
-
         newLine.addView(time, timeLayoutParams)
         newLine.addView(task, taskLayoutParams)
 
+        newLine.setPadding(10, 10, 10, 10)
+
         return newLine
     }
+
 
     fun updateTaskList() {
         // Получить из базы данных список дел на день, выполнить сортировку
@@ -148,7 +156,6 @@ class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
                 println("SLEEPING")
             }
         }
-        val eventService = EventService()
 
         println("GETTING ALL EVENTS FOR TODAY")
         val events = connection.readEventsForToday(currentDate.calendar.timeInMillis)
@@ -160,7 +167,7 @@ class ToDoActivity : BaseSwipeToDismissActivity(), View.OnClickListener {
             addToTaskList(newTask)
         }
 
-        if (events.size == 0) {
+        if (events.isEmpty()) {
             llMain.removeAllViews()
         }
 

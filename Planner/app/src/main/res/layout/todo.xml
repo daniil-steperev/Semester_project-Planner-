@@ -27,6 +27,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:textColor="@color/black"
                     android:text="@string/page_name"
                     android:textSize="36sp" />
 
@@ -84,7 +85,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
                         android:layout_weight="1"
-                        android:background="@drawable/add_button"
+                        android:background="@drawable/menu_button"
                         android:gravity="center"
                         android:text="@string/add_button_todo"
                         android:textSize="20sp" />
@@ -95,7 +96,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp"
                         android:layout_weight="1"
-                        android:background="@drawable/remove_button"
+                        android:background="@drawable/menu_button"
                         android:gravity="center"
                         android:text="@string/delete_button_todo"
                         android:textSize="20sp" />
@@ -105,7 +106,6 @@
                     android:id="@+id/todo_window"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/todo_background"
                     android:orientation="vertical" />
             </LinearLayout>
         </LinearLayout>
